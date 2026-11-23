@@ -1,0 +1,64 @@
+# Local environments and generated files
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage*
+htmlcov/
+
+# Secrets and local credentials
+.env
+.env.*
+!.env.example
+**/secrets.toml
+*.pem
+*.key
+
+# Simulation / workbench state and build products
+/build/
+/runs/
+/exports/
+/tmp/
+/data/
+/simulator/Output/
+/versions/*-source/Output/
+**/CMakeFiles/
+**/CMakeCache.txt
+**/compile_commands.json
+*.exe
+*.dll
+*.pdb
+*.ilk
+*.cubin
+*.ptx
+*.tmp
+*.bak
+*.old
+*.log
+!tests/fixtures/**/*.log
+*.zip
+*.7z
+*.tar
+*.gz
+
+# Download caches and machine fonts (supply locally)
+/dependencies/pip-cache/
+/dependencies/fonts/
+/dependencies/pdf_dependencies.json
+
+# Generated evidence and historical snapshots
+/docs/qa/
+/docs/archives/
+/docs/experiments/
+/docs/material_gpu_evidence/
+/docs/BenchAgent_论文材料/
+/docs/*latest.json
+/docs/ui_environment.json
+/docs/*_console*.log
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

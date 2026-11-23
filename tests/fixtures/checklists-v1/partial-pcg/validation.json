@@ -1,0 +1,334 @@
+{
+  "status": "PASS",
+  "errors": [],
+  "warnings": [
+    "Partial PCG detail in frame 1"
+  ],
+  "quality_status": "NOT_ASSESSED",
+  "checks_schema": "benchagent-checks-v1",
+  "checks": [
+    {
+      "id": "V01",
+      "name": "进程正常结束",
+      "required": true,
+      "status": "PASS",
+      "expected": {
+        "returncode": 0,
+        "timeout": false
+      },
+      "actual": {
+        "returncode": 0,
+        "timeout": false
+      },
+      "evidence": [
+        "run_meta.json"
+      ],
+      "message": "检查通过",
+      "details": []
+    },
+    {
+      "id": "V02",
+      "name": "唯一完成标记",
+      "required": true,
+      "status": "PASS",
+      "expected": {
+        "completion_frames": [
+          "20"
+        ]
+      },
+      "actual": {
+        "completion_frames": [
+          "20"
+        ]
+      },
+      "evidence": [
+        "stdout.log",
+        "plan.json"
+      ],
+      "message": "检查通过",
+      "details": []
+    },
+    {
+      "id": "V03",
+      "name": "实际帧数与连续帧序号",
+      "required": true,
+      "status": "PASS",
+      "expected": {
+        "actual_frames": 20,
+        "frame_sequence": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ]
+      },
+      "actual": {
+        "actual_frames": 20,
+        "frame_sequence": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ]
+      },
+      "evidence": [
+        "raw/frames.csv",
+        "plan.json"
+      ],
+      "message": "检查通过",
+      "details": []
+    },
+    {
+      "id": "V04",
+      "name": "程序完成状态",
+      "required": true,
+      "status": "PASS",
+      "expected": {
+        "completed": true,
+        "finite_state": true,
+        "frames_completed": 20
+      },
+      "actual": {
+        "completed": true,
+        "finite_state": true,
+        "frames_completed": 20
+      },
+      "evidence": [
+        "raw/status.json",
+        "plan.json"
+      ],
+      "message": "检查通过",
+      "details": []
+    },
+    {
+      "id": "V05",
+      "name": "文件新鲜度与运行身份",
+      "required": true,
+      "status": "PASS",
+      "expected": {
+        "fresh_output": true,
+        "identity_unchanged": true
+      },
+      "actual": {
+        "fresh_output": true,
+        "identity_unchanged": true
+      },
+      "evidence": [
+        "run_meta.json",
+        "identity_before.json",
+        "identity_after.json"
+      ],
+      "message": "检查通过",
+      "details": []
+    },
+    {
+      "id": "V06",
+      "name": "必需指标可读且数值合法",
+      "required": true,
+      "status": "PASS",
+      "expected": "必需文件可解析；时间与计数有限且非负，单帧耗时为正",
+      "actual": {
+        "parsed": true,
+        "frame_records": 20,
+        "pcg_records": 20
+      },
+      "evidence": [
+        "raw/frames.csv",
+        "raw/pcg_iterations.jsonl",
+        "raw/metadata.json",
+        "raw/status.json",
+        "raw/collision_summary.json"
+      ],
+      "message": "检查通过",
+      "details": []
+    },
+    {
+      "id": "V07",
+      "name": "PCG 聚合与明细一致",
+      "required": true,
+      "status": "PASS",
+      "expected": "帧号唯一且有效；完整明细与聚合计数相等，部分明细不超过聚合计数",
+      "actual": {
+        "unique_valid_frames": true,
+        "mismatch_frames": [],
+        "aggregate_iterations": 140,
+        "recorded_iterations": 136
+      },
+      "evidence": [
+        "raw/frames.csv",
+        "raw/pcg_iterations.jsonl"
+      ],
+      "message": "检查通过",
+      "details": []
+    },
+    {
+      "id": "V08",
+      "name": "PCG 求解明细覆盖率",
+      "required": false,
+      "status": "WARNING",
+      "expected": "每次 PCG 调用均有明细；不完整时告警，不补零",
+      "actual": {
+        "expected_solves": 40,
+        "covered_solves": 39,
+        "coverage": 0.975,
+        "missing_frames": [],
+        "partial_frames": [
+          1
+        ]
+      },
+      "evidence": [
+        "raw/frames.csv",
+        "raw/pcg_iterations.jsonl"
+      ],
+      "message": "存在非关键缺项，保留告警",
+      "details": [
+        "Partial PCG detail in frame 1"
+      ]
+    },
+    {
+      "id": "V09",
+      "name": "默认场景与初始状态",
+      "required": true,
+      "status": "PASS",
+      "expected": {
+        "frames": 20,
+        "scene_no": 1,
+        "cloth_scene": "",
+        "initial_physical_frame": 0
+      },
+      "actual": {
+        "frames": 20,
+        "scene_no": 1,
+        "cloth_scene": "",
+        "initial_physical_frame": 0
+      },
+      "evidence": [
+        "raw/metadata.json",
+        "plan.json"
+      ],
+      "message": "检查通过",
+      "details": []
+    },
+    {
+      "id": "V10",
+      "name": "固定 C0 配置",
+      "required": true,
+      "status": "PASS",
+      "expected": {
+        "termination": "compensated",
+        "method": "pcg_dual_graph",
+        "converter_indexed_reduce": true,
+        "toi_min_updates": 6,
+        "toi_threshold": 0.001,
+        "residual_threshold": 0.03,
+        "residual_floor": 1e-30,
+        "newton_tolerance_scale": 1,
+        "pcg_tolerance_scale": 1,
+        "production_measurement": true,
+        "profile_stages": false,
+        "trace_newton": false,
+        "audit_frame": 0,
+        "checkpoint_in": "",
+        "base_commit": "c49982fac7767225c7775683734c89eb74081142",
+        "residual_weight": 0.03333333333333333
+      },
+      "actual": {
+        "termination": "compensated",
+        "method": "pcg_dual_graph",
+        "converter_indexed_reduce": true,
+        "toi_min_updates": 6,
+        "toi_threshold": 0.001,
+        "residual_threshold": 0.03,
+        "residual_floor": 1e-30,
+        "newton_tolerance_scale": 1,
+        "pcg_tolerance_scale": 1,
+        "production_measurement": true,
+        "profile_stages": false,
+        "trace_newton": false,
+        "audit_frame": 0,
+        "checkpoint_in": "",
+        "base_commit": "c49982fac7767225c7775683734c89eb74081142",
+        "residual_weight": 0.03333333333333333
+      },
+      "evidence": [
+        "raw/metadata.json",
+        "profile.json"
+      ],
+      "message": "检查通过",
+      "details": []
+    },
+    {
+      "id": "V11",
+      "name": "状态有限且保护预算未触顶",
+      "required": true,
+      "status": "PASS",
+      "expected": {
+        "nonfinite_vertices": 0,
+        "newton_cap_hits": 0,
+        "diagnostic_budget_hits": 0
+      },
+      "actual": {
+        "newton_cap_hits": 0,
+        "diagnostic_budget_hits": 0,
+        "nonfinite_vertices": 0,
+        "violations": []
+      },
+      "evidence": [
+        "raw/frames.csv",
+        "raw/status.json"
+      ],
+      "message": "检查通过",
+      "details": []
+    },
+    {
+      "id": "V12",
+      "name": "Graph 实际执行且无回退",
+      "required": true,
+      "status": "PASS",
+      "expected": "方向图至少执行一次且所有帧均无 Graph 回退",
+      "actual": {
+        "fallbacks": 0,
+        "violations": [],
+        "direction_launches": 140
+      },
+      "evidence": [
+        "raw/frames.csv"
+      ],
+      "message": "检查通过",
+      "details": []
+    }
+  ],
+  "synthetic": true
+}

@@ -1,0 +1,441 @@
+{
+  "schema": "scene-catalog-v1",
+  "dialogue_default_frames": 20,
+  "scenes": [
+    {
+      "id": "default",
+      "aliases": [
+        "默认场景"
+      ],
+      "native_id": 1,
+      "display_name": "软体／刚体／布料耦合",
+      "category": "耦合",
+      "description": "封存 StiffGIPC 的原生场景 1",
+      "source": "StiffGIPC/gl_main.cu:set_case2",
+      "solver_build": "3a45087f+benchagent-observability-v1",
+      "required_assets": [
+        "Assets/scene/parameterSetting.txt",
+        "Assets/tetMesh/bunny2.msh",
+        "Assets/triMesh/cloth_high.obj",
+        "Assets/sorted_mesh/bunny2_sorted.16.msh",
+        "Assets/sorted_mesh/bunny2_sorted.16.part",
+        "Assets/sorted_mesh/cloth_high_sorted.16.obj",
+        "Assets/sorted_mesh/cloth_high_sorted.16.part"
+      ],
+      "availability": "verified",
+      "reason": "已有正式归档",
+      "probe": null,
+      "frames": {
+        "min": 1,
+        "max": 1000
+      },
+      "metrics": true,
+      "geometry": false,
+      "native_render_frames": true,
+      "verified_run": "runs/job-0a500301f8154e80965bf2d0c41a84e4/benchmark_summary.json",
+      "state_capture": {
+        "initial_and_final_vertices": true,
+        "all_vertex_states_available_in_native_cli": true,
+        "all_states_enabled_by_workbench": false,
+        "workbench_geometry_replay": false
+      }
+    },
+    {
+      "id": "box-pipe",
+      "native_id": 0,
+      "display_name": "箱管",
+      "category": "刚体",
+      "description": "封存 StiffGIPC 的原生场景 0",
+      "source": "StiffGIPC/gl_main.cu:set_case1",
+      "solver_build": "3a45087f+benchagent-observability-v1",
+      "required_assets": [
+        "Assets/scene/parameterSetting.txt",
+        "Assets/tetMesh/cube.msh",
+        "Assets/sorted_mesh/cube_sorted.16.msh",
+        "Assets/sorted_mesh/cube_sorted.16.part"
+      ],
+      "availability": "verified",
+      "reason": "通过 20 帧原生试跑",
+      "probe": "tmp/scene-probe-5faac0a4/0/raw/status.json",
+      "frames": {
+        "min": 1,
+        "max": 1000
+      },
+      "metrics": true,
+      "geometry": false,
+      "native_render_frames": true,
+      "verified_run": "runs/job-aeca627cc402444a93a39b12fa6783d7/benchmark_summary.json",
+      "state_capture": {
+        "initial_and_final_vertices": true,
+        "all_vertex_states_available_in_native_cli": true,
+        "all_states_enabled_by_workbench": false,
+        "workbench_geometry_replay": false
+      }
+    },
+    {
+      "id": "wrecking-ball",
+      "native_id": 2,
+      "display_name": "摆锤",
+      "category": "刚体",
+      "description": "封存 StiffGIPC 的原生场景 2",
+      "source": "StiffGIPC/gl_main.cu:set_case3",
+      "solver_build": "3a45087f+benchagent-observability-v1",
+      "required_assets": [
+        "Assets/scene/parameterSetting.txt",
+        "Assets/scene/json/wrecking-ball-simple.json",
+        "Assets/tetMesh/wrecking-ball-mesh/cube.obj_.msh",
+        "Assets/tetMesh/wrecking-ball-mesh/wrecking-ball/ball.obj_.msh",
+        "Assets/tetMesh/wrecking-ball-mesh/wrecking-ball/link.obj_.msh"
+      ],
+      "availability": "verified",
+      "reason": "通过 20 帧原生试跑",
+      "probe": "tmp/scene-probe-5faac0a4/2/raw/status.json",
+      "frames": {
+        "min": 1,
+        "max": 1000
+      },
+      "metrics": true,
+      "geometry": false,
+      "native_render_frames": true,
+      "verified_run": "runs/job-ef941db2e9f34919a82102546a6f99de/benchmark_summary.json",
+      "state_capture": {
+        "initial_and_final_vertices": true,
+        "all_vertex_states_available_in_native_cli": true,
+        "all_states_enabled_by_workbench": false,
+        "workbench_geometry_replay": false
+      }
+    },
+    {
+      "id": "fixed-cloth",
+      "native_id": 3,
+      "display_name": "固定布料",
+      "category": "布料",
+      "description": "封存 StiffGIPC 的原生场景 3",
+      "source": "StiffGIPC/gl_main.cu:set_case4",
+      "solver_build": "3a45087f+benchagent-observability-v1",
+      "required_assets": [
+        "Assets/scene/parameterSetting.txt",
+        "Assets/triMesh/cloth_high.obj"
+      ],
+      "availability": "verified",
+      "reason": "已有正式归档",
+      "probe": null,
+      "frames": {
+        "min": 1,
+        "max": 1000
+      },
+      "metrics": true,
+      "geometry": true,
+      "native_render_frames": true,
+      "verified_run": "runs/job-5a1ecd9d10ad4409bf1c8d4718ed583f/benchmark_summary.json",
+      "state_capture": {
+        "initial_and_final_vertices": true,
+        "all_vertex_states_available_in_native_cli": true,
+        "all_states_enabled_by_workbench": true,
+        "workbench_geometry_replay": true
+      }
+    },
+    {
+      "id": "twisting-mat",
+      "native_id": 4,
+      "display_name": "扭转垫",
+      "category": "软体",
+      "description": "封存 StiffGIPC 的原生场景 4",
+      "source": "StiffGIPC/gl_main.cu:set_case5",
+      "solver_build": "3a45087f+benchagent-observability-v1",
+      "required_assets": [
+        "Assets/scene/parameterSetting.txt",
+        "Assets/tetMesh/high_mat.msh",
+        "Assets/sorted_mesh/high_mat_sorted.16.msh",
+        "Assets/sorted_mesh/high_mat_sorted.16.part"
+      ],
+      "availability": "verified",
+      "reason": "通过 20 帧原生试跑",
+      "probe": "tmp/scene-probe-5faac0a4/4/raw/status.json",
+      "frames": {
+        "min": 1,
+        "max": 1000
+      },
+      "metrics": true,
+      "geometry": false,
+      "native_render_frames": true,
+      "verified_run": "runs/job-e7a7752240ca49a5911a12d0e19fbf1c/benchmark_summary.json",
+      "state_capture": {
+        "initial_and_final_vertices": true,
+        "all_vertex_states_available_in_native_cli": true,
+        "all_states_enabled_by_workbench": false,
+        "workbench_geometry_replay": false
+      }
+    },
+    {
+      "id": "large-box-pipe-cloth",
+      "native_id": 5,
+      "display_name": "大规模箱管与布料",
+      "category": "耦合",
+      "description": "封存 StiffGIPC 的原生场景 5",
+      "source": "StiffGIPC/gl_main.cu:set_case6",
+      "solver_build": "3a45087f+benchagent-observability-v1",
+      "required_assets": [
+        "Assets/scene/parameterSetting.txt",
+        "Assets/tetMesh/cube.msh",
+        "Assets/triMesh/cloth_high.obj",
+        "Assets/sorted_mesh/cube_sorted.16.msh",
+        "Assets/sorted_mesh/cube_sorted.16.part",
+        "Assets/sorted_mesh/cloth_high_sorted.16.obj",
+        "Assets/sorted_mesh/cloth_high_sorted.16.part"
+      ],
+      "availability": "verified",
+      "reason": "通过 20 帧原生试跑",
+      "probe": "tmp/scene-probe-5faac0a4/5/raw/status.json",
+      "frames": {
+        "min": 1,
+        "max": 1000
+      },
+      "metrics": true,
+      "geometry": false,
+      "native_render_frames": true,
+      "verified_run": "runs/job-7500be0570b84460ab398cac2e97e9f9/benchmark_summary.json",
+      "state_capture": {
+        "initial_and_final_vertices": true,
+        "all_vertex_states_available_in_native_cli": true,
+        "all_states_enabled_by_workbench": false,
+        "workbench_geometry_replay": false
+      }
+    },
+    {
+      "id": "cloth-hang",
+      "native_id": 1,
+      "cloth_scene": "hang",
+      "display_name": "悬挂布料",
+      "category": "具名布料",
+      "description": "原生 set_case8 具名分支",
+      "source": "StiffGIPC/benchmark_cloth_v1.inc:set_case8",
+      "solver_build": "3a45087f+benchagent-observability-v1",
+      "required_assets": [
+        "Assets/scene/parameterSetting.txt",
+        "Assets/scene/abd_system_config.json",
+        "Assets/triMesh/cipc_square2K.obj",
+        "Assets/sorted_mesh/cipc_square2K_sorted.16.obj",
+        "Assets/sorted_mesh/cipc_square2K_sorted.16.part"
+      ],
+      "availability": "verified",
+      "reason": "正式工作器完成 37 帧，已验证原生抓帧",
+      "probe": "tmp/named-scenes-04eb15c4/hang/raw/status.json",
+      "frames": {
+        "min": 1,
+        "max": 1000
+      },
+      "metrics": true,
+      "geometry": false,
+      "native_render_frames": true,
+      "dt": 0.04,
+      "state_capture": {
+        "initial_and_final_vertices": true,
+        "all_vertex_states_available_in_native_cli": true,
+        "all_states_enabled_by_workbench": false,
+        "workbench_geometry_replay": false
+      },
+      "verified_run": "runs/job-4e3cc7c3d8af416ab29c0cc114f70e77/benchmark_summary.json"
+    },
+    {
+      "id": "cloth-sphere7",
+      "native_id": 1,
+      "cloth_scene": "sphere7",
+      "goal_analysis": {
+        "contact_trace": true,
+        "fixed_obstacle_vertices": 483,
+        "cloth_vertices": 10201,
+        "time_step_s": 0.01,
+        "contact_obstacle": "abd_sphere.msh"
+      },
+      "display_name": "球体与布料",
+      "category": "具名布料",
+      "description": "原生 set_case8 具名分支",
+      "source": "StiffGIPC/benchmark_cloth_v1.inc:set_case8",
+      "solver_build": "3a45087f+benchagent-observability-v1",
+      "required_assets": [
+        "Assets/scene/parameterSetting.txt",
+        "Assets/scene/abd_system_config.json",
+        "Assets/tetMesh/abd_sphere.msh",
+        "Assets/triMesh/square_cloth_10k.obj",
+        "Assets/sorted_mesh/square_cloth_10k_sorted.16.obj",
+        "Assets/sorted_mesh/square_cloth_10k_sorted.16.part"
+      ],
+      "availability": "verified",
+      "reason": "正式工作器完成 137 帧，已验证原生抓帧",
+      "probe": "tmp/named-scenes-04eb15c4/sphere7/raw/status.json",
+      "frames": {
+        "min": 1,
+        "max": 1000
+      },
+      "metrics": true,
+      "geometry": false,
+      "native_render_frames": true,
+      "dt": 0.01,
+      "state_capture": {
+        "initial_and_final_vertices": true,
+        "all_vertex_states_available_in_native_cli": true,
+        "all_states_enabled_by_workbench": false,
+        "workbench_geometry_replay": false
+      },
+      "verified_run": "runs/job-d6a8cd5a4bca4300841cc06b03e7f3fa/benchmark_summary.json"
+    },
+    {
+      "id": "cloth-bunny",
+      "native_id": 1,
+      "cloth_scene": "bunny",
+      "display_name": "兔形障碍与布料",
+      "category": "具名布料",
+      "description": "原生 set_case8 具名分支",
+      "source": "StiffGIPC/benchmark_cloth_v1.inc:set_case8",
+      "solver_build": "3a45087f+benchagent-observability-v1",
+      "required_assets": [
+        "Assets/scene/parameterSetting.txt",
+        "Assets/scene/abd_system_config.json",
+        "Assets/tetMesh/bunny2.msh",
+        "Assets/triMesh/square_cloth_23k.obj",
+        "Assets/sorted_mesh/square_cloth_23k_sorted.16.obj",
+        "Assets/sorted_mesh/square_cloth_23k_sorted.16.part"
+      ],
+      "availability": "verified",
+      "reason": "原生执行与 OpenGL 抓帧均通过 8 帧探测",
+      "probe": "tmp/named-scenes-04eb15c4/bunny/raw/status.json",
+      "frames": {
+        "min": 1,
+        "max": 1000
+      },
+      "metrics": true,
+      "geometry": false,
+      "native_render_frames": true,
+      "dt": 0.01,
+      "state_capture": {
+        "initial_and_final_vertices": true,
+        "all_vertex_states_available_in_native_cli": true,
+        "all_states_enabled_by_workbench": false,
+        "workbench_geometry_replay": false
+      }
+    },
+    {
+      "id": "cloth-table",
+      "native_id": 1,
+      "cloth_scene": "table",
+      "display_name": "桌面与布料",
+      "category": "具名布料",
+      "description": "原生 set_case8 具名分支",
+      "source": "StiffGIPC/benchmark_cloth_v1.inc:set_case8",
+      "solver_build": "3a45087f+benchagent-observability-v1",
+      "required_assets": [
+        "Assets/scene/parameterSetting.txt",
+        "Assets/scene/abd_system_config.json",
+        "Assets/triMesh/cipc_table.obj",
+        "Assets/triMesh/square_cloth_23k.obj",
+        "Assets/sorted_mesh/cipc_table_sorted.16.obj",
+        "Assets/sorted_mesh/cipc_table_sorted.16.part",
+        "Assets/sorted_mesh/square_cloth_23k_sorted.16.obj",
+        "Assets/sorted_mesh/square_cloth_23k_sorted.16.part"
+      ],
+      "availability": "verified",
+      "reason": "原生执行与 OpenGL 抓帧均通过 8 帧探测",
+      "probe": "tmp/named-scenes-04eb15c4/table/raw/status.json",
+      "frames": {
+        "min": 1,
+        "max": 1000
+      },
+      "metrics": true,
+      "geometry": false,
+      "native_render_frames": true,
+      "dt": 0.01,
+      "state_capture": {
+        "initial_and_final_vertices": true,
+        "all_vertex_states_available_in_native_cli": true,
+        "all_states_enabled_by_workbench": false,
+        "workbench_geometry_replay": false
+      }
+    },
+    {
+      "id": "cloth-stack10",
+      "native_id": 1,
+      "cloth_scene": "stack10",
+      "display_name": "十层布料堆叠",
+      "category": "具名布料",
+      "description": "原生 set_case8 具名分支",
+      "source": "StiffGIPC/benchmark_cloth_v1.inc:set_case8",
+      "solver_build": "3a45087f+benchagent-observability-v1",
+      "required_assets": [
+        "Assets/scene/parameterSetting.txt",
+        "Assets/scene/abd_system_config.json",
+        "Assets/triMesh/square_cloth_10k.obj",
+        "Assets/sorted_mesh/square_cloth_10k_sorted.16.obj",
+        "Assets/sorted_mesh/square_cloth_10k_sorted.16.part"
+      ],
+      "availability": "verified",
+      "reason": "原生执行与 OpenGL 抓帧均通过 8 帧探测",
+      "probe": "tmp/named-scenes-04eb15c4/stack10/raw/status.json",
+      "frames": {
+        "min": 1,
+        "max": 1000
+      },
+      "metrics": true,
+      "geometry": false,
+      "native_render_frames": true,
+      "dt": 0.02,
+      "state_capture": {
+        "initial_and_final_vertices": true,
+        "all_vertex_states_available_in_native_cli": true,
+        "all_states_enabled_by_workbench": false,
+        "workbench_geometry_replay": false
+      }
+    },
+    {
+      "id": "wrecking-box",
+      "native_id": 6,
+      "display_name": "箱体排列",
+      "aliases": [
+        "箱体阵列",
+        "wrecking-ball-box"
+      ],
+      "category": "刚体",
+      "description": "工程自带 wrecking-ball-box.json 中的 560 个 ABD 箱体",
+      "source": "StiffGIPC/gl_main.cu:set_wrecking_box_scene",
+      "runtime_variant": "native-box-scene",
+      "solver_build": "3a45087f+native-box-scene",
+      "required_assets": [
+        "Assets/scene/parameterSetting.txt",
+        "Assets/scene/abd_system_config.json",
+        "Assets/scene/json/wrecking-ball-box.json",
+        "Assets/tetMesh/wrecking-ball-mesh/cube.obj_.msh"
+      ],
+      "availability": "verified",
+      "reason": "独立 CUDA 构建实测 8 帧与原生 OpenGL 画面",
+      "probe": "docs/qa/benchagent_v4_dialogue/native-probe-box/raw/status.json",
+      "frames": {
+        "min": 1,
+        "max": 1000
+      },
+      "metrics": true,
+      "geometry": false,
+      "native_render_frames": true,
+      "state_capture": {
+        "initial_and_final_vertices": true,
+        "workbench_geometry_replay": false
+      }
+    }
+  ],
+  "execution_requirements": [
+    "Windows",
+    "NVIDIA GPU / CUDA",
+    "已封存的当前 StiffGIPC 构建"
+  ],
+  "unsupported": [
+    {
+      "selector": "numeric scene 7 or higher",
+      "availability": "unsupported",
+      "reason": "扩展构建只注册 0–6。编号 7 无独立构造函数，已有 sphere7 通过具名选择器开放。"
+    },
+    {
+      "selector": "arbitrary assets or scene files",
+      "availability": "needs_adapter",
+      "reason": "当前入口只有已登记的场景构建函数"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "suite_id": "default-mvp",
+  "scene": "default",
+  "tasks": [
+    {
+      "id": "smoke-20",
+      "frames": 20
+    },
+    {
+      "id": "standard-50",
+      "frames": 50
+    },
+    {
+      "id": "extended-100",
+      "frames": 100
+    }
+  ]
+}

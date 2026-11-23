@@ -1,0 +1,11 @@
+{
+  "schema_version": "model-gateway-v1",
+  "enabled": false,
+  "provider": "disabled",
+  "model": null,
+  "base_url": null,
+  "api_key_env": null,
+  "timeout_sec": 30,
+  "capabilities": [],
+  "note": "仅为后续接入预留；本阶段不读取凭据、不发起模型请求。"
+}

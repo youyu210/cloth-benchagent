@@ -1,0 +1,174 @@
+--- a/StiffGIPC/GIPC.cu
++++ b/StiffGIPC/GIPC.cu
+@@ -1,3 +1,4 @@
++#include <chrono>
+ //
+ // GIPC.cu
+ // GIPC
+@@ -10869,6 +10870,10 @@
+ #include <vector>
+ #include <fstream>
+ std::vector<int> iterV;
++bool paper_benchmark = false;
++double paper_step_ms = 0;
++int paper_newton_cap_hits = 0;
++
+ int              GIPC::solve_subIP(device_TetraData& TetMesh,
+                       double&           time0,
+                       double&           time1,
+@@ -10877,7 +10882,8 @@
+                       double&           time4)
+ {
+     auto& stats_at_current_frame = gipc::Statistics::instance().at_current_frame();
+-    std::cout << "solve_subIP >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
++    if(!paper_benchmark)
++        std::cout << "solve_subIP >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+               << std::endl;
+ 
+     stats_at_current_frame["newton"] = gipc::Json::array();
+@@ -11013,7 +11019,10 @@
+     //    outiter << iterV[ii] << std::endl;
+     //}
+     //outiter.close();
+-    printf("\n\n      Kappa: %f                               iteration k:  %d\n", Kappa, k);
++    if(paper_benchmark && k == iterCap)
++        ++paper_newton_cap_hits;
++    if(!paper_benchmark)
++        printf("\n\n      Kappa: %f                               iteration k:  %d\n", Kappa, k);
+     return k;
+ }
+ 
+@@ -11084,6 +11093,7 @@
+ bool   isUpdateBoundary = false;
+ void   GIPC::IPC_Solver(device_TetraData& TetMesh)
+ {
++    const auto paper_start = std::chrono::steady_clock::now();
+     //double animation_fullRate = 0;
+     cudaEvent_t start, end0;
+     cudaEventCreate(&start);
+@@ -11243,6 +11253,14 @@
+     cudaEventElapsedTime(&tttime, start, end0);
+     totalTime += tttime;
+     total_Frames++;
++    if(paper_benchmark)
++    {
++        paper_step_ms = std::chrono::duration<double, std::milli>(
++            std::chrono::steady_clock::now() - paper_start).count();
++        auto& stats = gipc::Statistics::instance();
++        stats.frame(stats.frame() + 1);
++        return;
++    }
+     printf("average time cost:     %f,    frame id:   %d\n", totalTime / totalNT, total_Frames);
+ 
+ 
+--- a/StiffGIPC/gl_main.cu
++++ b/StiffGIPC/gl_main.cu
+@@ -1,3 +1,4 @@
++#include <stdexcept>
+ //
+ // gl_main.cpp
+ // GIPC
+@@ -1742,8 +1743,103 @@
+ }
+ 
+ 
++// Paper comparison adapter. Fixed original scene 1, with legacy rendering
++// and report I/O outside the synchronized physical-step measurement.
++extern bool paper_benchmark;
++extern double paper_step_ms;
++extern int paper_newton_cap_hits;
++extern int totalNT;
++extern double total_Cg_count;
++extern double totalCollisionPairs;
++
++static int run_paper_benchmark(int frames, const std::filesystem::path& out)
++{
++    if(frames < 1 || frames > 1000 || std::filesystem::exists(out))
++        throw std::runtime_error("Invalid frames or nonempty output directory");
++    std::filesystem::create_directories(out);
++    paper_benchmark = true;
++    Init_CUDA();
++    LoadSettings();
++    ipc.build_gipc_system(d_tetMesh);
++    initScene();
++    CUDA_SAFE_CALL(cudaDeviceSynchronize());
++    std::vector<double3> vertices(ipc.vertexNum);
++    auto snapshot = [&](const char* name)
++    {
++        CUDA_SAFE_CALL(cudaMemcpy(vertices.data(), ipc._vertexes,
++                                  vertices.size() * sizeof(double3), cudaMemcpyDeviceToHost));
++        for(const auto& point : vertices)
++            if(!std::isfinite(point.x) || !std::isfinite(point.y) || !std::isfinite(point.z))
++                throw std::runtime_error("Nonfinite position");
++        if(!name)
++            return;
++        std::ofstream stream(out / name, std::ios::binary);
++        stream.write(reinterpret_cast<const char*>(vertices.data()),
++                     vertices.size() * sizeof(double3));
++        if(!stream)
++            throw std::runtime_error("Failed to write position snapshot");
++    };
++    snapshot("initial.f64");
++    auto save_device = [&](const char* name, auto* pointer, size_t size)
++    {
++        std::vector<char> data(size);
++        if(size)
++            CUDA_SAFE_CALL(cudaMemcpy(data.data(), pointer, size, cudaMemcpyDeviceToHost));
++        std::ofstream stream(out / name, std::ios::binary);
++        stream.write(data.data(), data.size());
++        if(!stream)
++            throw std::runtime_error("Failed to write initial-state evidence");
++    };
++    save_device("initial_velocities.f64", d_tetMesh.velocities, ipc.vertexNum * sizeof(double3));
++    save_device("masses.f64", d_tetMesh.masses, ipc.vertexNum * sizeof(double));
++    save_device("boundary.i32", d_tetMesh.BoundaryType, ipc.vertexNum * sizeof(int));
++    save_device("tetrahedra.u32", d_tetMesh.tetrahedras, tetMesh.tetrahedraNum * sizeof(uint4));
++    std::ofstream metadata(out / "metadata.json");
++    metadata << gipc::Json{{"scene_no", 1}, {"frames", frames},
++                           {"vertex_count", ipc.vertexNum}, {"tetrahedron_count", tetMesh.tetrahedraNum},
++                           {"dt", ipc.IPC_dt}, {"pcg_tolerance", ipc.pcg_threshold},
++                           {"newton_tolerance", ipc.Newton_solver_threshold},
++                           {"gpu_index", 0}, {"method", "original"},
++                           {"timing", "synchronized host wall clock inside IPC_Solver, before legacy I/O"}}.dump(2);
++    if(!metadata)
++        throw std::runtime_error("Failed to write metadata");
++    metadata.close();
++    std::ofstream csv(out / "frames.csv");
++    csv << "frame,step_ms,newton_iters,pcg_iters,collision_counter_cumulative,newton_cap_hits\n";
++    csv.precision(17);
++    for(int f = 1; f <= frames; ++f)
++    {
++        const int newton_before = totalNT;
++        const double pcg_before = total_Cg_count;
++        paper_newton_cap_hits = 0;
++        ipc.IPC_Solver(d_tetMesh);
++        snapshot(f == frames ? "final.f64" : nullptr);
++        csv << f << ',' << paper_step_ms << ',' << totalNT - newton_before << ','
++            << total_Cg_count - pcg_before << ',' << totalCollisionPairs << ',' << paper_newton_cap_hits << '\n';
++    }
++    csv.flush();
++    if(!csv)
++        throw std::runtime_error("Failed to write frame data");
++    std::ofstream(out / "status.json")
++        << gipc::Json{{"completed", true}, {"frames_completed", frames}, {"finite_state", true}}.dump(2);
++    std::cout << "TEST_COMPLETE frames=" << frames << std::endl;
++    return 0;
++}
++
+ int main(int argc, char** argv)
+ {
++    if(argc == 4 && std::string(argv[1]) == "--paper-benchmark")
++    {
++        try
++        {
++            return run_paper_benchmark(std::stoi(argv[2]), argv[3]);
++        }
++        catch(const std::exception& error)
++        {
++            std::cerr << error.what() << std::endl;
++            return 2;
++        }
++    }
+     glutInit(&argc, argv);
+     //glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+ 

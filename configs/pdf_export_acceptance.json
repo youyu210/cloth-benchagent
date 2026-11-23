@@ -1,0 +1,64 @@
+{
+  "accepted": true,
+  "verified_at_utc": "2026-11-09T01:24:32.686785+00:00",
+  "renderer": {
+    "renderer_sha256": "2b0e406a036ff7a0a9e8e106286d648646361157e5defed9ae5f736c146087f6",
+    "font_sha256": "9b1959db3b3abeb7efdaec26edf7dfe871a6039de8d614af7248575207be629e",
+    "reportlab_version": "4.4.9",
+    "layout_version": "chinese-a4-v1",
+    "view_code_sha256": "c752903171549caffe2337790393489b2112c1b948646e484594cfa2918932ed",
+    "presentation_code_sha256": "5a4e910b5a9369bad682de03891010f3c6f2305a0f519bfaa832527c0ed75306",
+    "document_code_sha256": "9f7f189841e48e6931ff2f8a84c339d66aa680acda30da6e644abf63a26c6f21"
+  },
+  "reviewed_pages": [
+    {
+      "page": 1,
+      "file": "docs/qa/workbench_branding_20261109/page-1.png",
+      "sha256": "a39157977b5967f0734107b86ebd17fa4946943fcb8981ea940caefc60c3389e"
+    },
+    {
+      "page": 2,
+      "file": "docs/qa/workbench_branding_20261109/page-2.png",
+      "sha256": "e67c387cc4231eb3af4be284ff1672ce33ce3ba06d6700213adfc50dface5d70"
+    },
+    {
+      "page": 3,
+      "file": "docs/qa/workbench_branding_20261109/page-3.png",
+      "sha256": "057a044c036549d2639b1f5a60d580a097be34a5070385086b71509e4dfabfeb"
+    },
+    {
+      "page": 4,
+      "file": "docs/qa/workbench_branding_20261109/page-4.png",
+      "sha256": "639d94424a11d67857ea5f8703492cf243c2dddaf32d3a4529635b37b6a2fec4"
+    },
+    {
+      "page": 5,
+      "file": "docs/qa/workbench_branding_20261109/page-5.png",
+      "sha256": "ed02e07211dbc6b75dec39a1873c4e1153fae8cddc974b210291259fb02f9d35"
+    },
+    {
+      "page": 6,
+      "file": "docs/qa/workbench_branding_20261109/page-6.png",
+      "sha256": "965de48ae8b5a3f7cb14c67fbcf36d4895a29e44af79a3e8e044a811adf87402"
+    },
+    {
+      "page": 7,
+      "file": "docs/qa/workbench_branding_20261109/page-7.png",
+      "sha256": "99fc77a7f002887b1d77451ae42333a7bdacaa2da4d2a275dedc649ee15a4c0c"
+    },
+    {
+      "page": 8,
+      "file": "docs/qa/workbench_branding_20261109/page-8.png",
+      "sha256": "83fbe7a81482a590494d90dd5ea97296defa7c4ac56588e35e63289a8a27ab75"
+    },
+    {
+      "page": 9,
+      "file": "docs/qa/workbench_branding_20261109/page-9.png",
+      "sha256": "3bed8078e9820077c9c3eae46bd4bf604925c0dd076762928a6ea8f5aa500c94"
+    }
+  ],
+  "sample_pdf": "exports/c55a1de592f84b0f5eea05d468a9f1198a22d6a6f80a5849341d825cfdb56a5a.pdf",
+  "sample_pdf_sha256": "2b50e1c82b399090fc556f28d2759e1b1675fc008033a6f120225f64741a460c",
+  "visual_review": "All 9 pages reviewed; Chinese title and header fit without clipping.",
+  "export_matches_reviewed_text": true
+}

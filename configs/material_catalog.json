@@ -1,0 +1,13 @@
+{
+  "schema": "benchagent-cloth-material-v1",
+  "parameters": {
+    "young_pa": {"label": "膜杨氏模量", "unit": "Pa", "min": 1000, "max": 10000000, "effect": "与泊松比共同决定面内拉伸和剪切系数。弯曲模量独立。"},
+    "density_kg_m3": {"label": "体密度", "unit": "kg/m³", "min": 10, "max": 2000, "effect": "在网格和厚度固定时改变布片顶点质量及惯性。"},
+    "poisson_ratio": {"label": "泊松比", "unit": "无量纲", "min": 0, "max": 0.49, "effect": "同时进入面内拉伸、剪切与弯曲系数。"}
+  },
+  "scenes": {
+    "fixed-cloth": {"object": "cloth", "label": "固定布片", "defaults": {"young_pa": 50000, "density_kg_m3": 200, "poisson_ratio": 0.49}, "editable": ["young_pa", "density_kg_m3", "poisson_ratio"]},
+    "cloth-hang": {"object": "cloth", "label": "悬挂布片", "defaults": {"young_pa": 821000, "density_kg_m3": 472.641509, "poisson_ratio": 0.243}, "editable": ["young_pa", "density_kg_m3", "poisson_ratio"]},
+    "cloth-sphere7": {"object": "cloth", "label": "球体场景中的布片", "defaults": {"young_pa": 1000000, "density_kg_m3": 200, "poisson_ratio": 0.49}, "editable": ["young_pa", "density_kg_m3"], "read_only": {"poisson_ratio": "此字段由布料与体 FEM 共用，球体场景保留原生预设。"}}
+  }
+}

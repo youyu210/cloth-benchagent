@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BenchAgent 智能测试工作台 · V3.1 离线原型</title>
+<link rel="stylesheet" href="benchagent-v3-1.css">
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+<div class="brand"><span class="brand-logo"><span>◇</span></span><div>StiffGIPC<br>BenchAgent</div></div>
+<nav class="nav" aria-label="主导航">
+<button type="button" class="active" data-route="smart"><span class="nav-symbol">▤</span>智能测试</button>
+<button type="button" data-route="tasks"><span class="nav-symbol">◈</span>基准任务</button>
+<button type="button" data-route="history"><span class="nav-symbol">≡</span>运行记录</button>
+<button type="button" data-route="reports"><span class="nav-symbol">▧</span>测试报告</button>
+<button type="button" data-route="profiles"><span class="nav-symbol">⚙</span>配置管理</button>
+<button type="button" data-route="settings"><span class="nav-symbol">⚙</span>系统设置</button>
+</nav>
+<div class="sidebar-spacer"></div>
+<div class="model-card"><div class="model-state"><span class="model-dot"></span>模型待接入</div><div class="model-sub">仅预留接口 · 未连接服务</div></div>
+</aside>
+<main class="main">
+<header class="header"><h1 id="page-title">智能基准测试 <small>（模型接口预留）</small></h1><div class="header-badges"><span class="badge">▱　项目路径：D:\benchagent</span><span class="badge">⚙　运行环境：待载入</span></div></header>
+<div class="preview-banner"><strong>离线交互原型 · 不执行仿真 · 不连接模型</strong><span id="mode-note">当前显示：合成数据演示，不是实验结果</span></div>
+
+<section class="workspace page" id="page-smart">
+<section class="card chat-card" aria-label="对话与任务计划">
+<div class="card-header"><div class="card-title"><span class="purple-icon">✧</span><h2>与 BenchAgent 对话</h2></div><span class="demo-source">规则预览</span></div>
+<div class="chat-thread">
+<div class="message user"><div class="message-meta">需求示例 · 非模型请求</div><div class="message-row"><div class="avatar user">●</div><div class="message-content"><div class="bubble" id="request-bubble">对 StiffGIPC 默认场景进行基准评测，运行 100 帧，统计运行耗时、牛顿和 PCG 迭代次数。</div></div></div></div>
+<div class="message assistant"><div class="message-row"><div class="avatar">▣</div><div class="message-content"><div class="message-meta"><strong>BenchAgent</strong><span>本地规则 · 模型待接入</span></div><p class="message-text">以下为固定规则生成的计划预览。没有调用模型，也未启动仿真。</p>
+<div class="plan-card"><div class="plan-heading"><span>▤　执行计划</span><span class="small" id="plan-state">计划示例</span></div><ol class="plan-list">
+<li><em>1</em><span><b>解析任务：</b>默认耦合场景，运行 <strong id="plan-frame-count">100</strong> 帧。</span></li>
+<li><em>2</em><span><b>环境检查：</b>核对程序、资产与 GPU 身份。</span></li>
+<li><em>3</em><span><b>配置参数：</b>固定 C0，参数快照只读。</span></li>
+<li><em>4</em><span><b>运行仿真：</b>独立执行并归档日志与统计。</span></li>
+<li><em>5</em><span><b>数据分析：</b>核对耗时、迭代及逐项检查。</span></li>
+<li><em>6</em><span><b>生成报告：</b>中文表格与原始证据可追溯。</span></li>
+</ol></div>
+<div class="plan-actions"><button class="button primary" type="button" disabled>▶ 开始执行（待接入）</button><button class="button" type="button" id="edit-plan">✎ 修改计划</button></div>
+<p class="hint">本原型只预览流程，不会创建真实运行任务。</p>
+<div class="inline-form" id="plan-editor" hidden><label for="plan-frames">选择固定帧数 <select id="plan-frames"><option value="20">20 帧</option><option value="50">50 帧</option><option value="100" selected>100 帧</option></select></label><button class="button subtle" type="button" id="apply-plan" style="width:100%;margin-top:10px">更新计划预览</button></div>
+</div></div></div>
+<div class="message assistant" id="demo-chat"><div class="message-row"><div class="avatar">▣</div><div class="message-content"><div class="message-meta"><strong>BenchAgent</strong><span>合成数据演示</span></div><p class="message-text">右侧已载入合成样例，用于查看指标、曲线和表格的联动布局。</p>
+<div class="summary-message"><div class="plan-heading">▥　合成结果摘要</div><ul><li id="chat-total">所有数值来自合成数据，不是实际性能成绩。</li><li id="chat-mean">统计与曲线使用同一份示例数据。</li><li>未运行仿真，未连接任何模型服务。</li></ul></div></div></div></div>
+</div>
+<div class="composer-label" id="prompt-status" role="status" aria-live="polite">可输入默认场景的 20 / 50 / 100 帧请求，生成规则计划预览。</div>
+<div class="composer"><textarea id="prompt" aria-label="输入任务需求" placeholder="例如：默认场景运行 50 帧，分析耗时与迭代次数。"></textarea><button class="send" type="button" id="send-prompt" aria-label="生成规则计划预览">➤</button></div>
+</section>
+
+<section class="card execution-card" aria-label="任务执行与结果">
+<div class="card-header execution-header"><div class="card-title"><span class="purple-icon">◩</span><h2>任务执行与结果</h2></div><div class="mode-switch" aria-label="原型展示状态"><button type="button" data-mode="empty" aria-pressed="false">未执行</button><button type="button" class="active" data-mode="demo" aria-pressed="true">合成演示</button></div></div>
+<div class="stages" aria-label="六步流程示意，非真实执行状态"><div class="stage" data-stage="1"><span class="circle">1</span>任务解析</div><div class="stage" data-stage="2"><span class="circle">2</span>环境检查</div><div class="stage" data-stage="3"><span class="circle">3</span>配置参数</div><div class="stage" data-stage="4"><span class="circle">4</span>运行仿真</div><div class="stage" data-stage="5"><span class="circle">5</span>数据分析</div><div class="stage" data-stage="6"><span class="circle">6</span>生成报告</div></div>
+<div class="dashboard">
+<div class="overview-row">
+<section class="card overview-card"><div class="card-header"><h3>运行概览</h3><span class="demo-source" id="dashboard-state">合成示例</span></div><div class="card-body">
+<div class="scene" aria-label="耦合场景概念示意，非真实仿真截图"><svg viewBox="0 0 200 180" role="img"><title>刚体、软体与布料概念示意</title><path d="M0 146 105 102 200 146 200 180 0 180Z" fill="#ffffff12"/><path d="M27 85 77 65 122 85 72 108Z" fill="#d8d2e9"/><path d="M27 85 72 108 72 151 27 128Z" fill="#9f95b6"/><path d="M72 108 122 85 122 128 72 151Z" fill="#b3a9cd"/><path d="M113 91Q133 88 145 109L176 98Q165 132 187 147L149 161Q126 149 128 131Q122 118 104 129Z" fill="#b5a1d6"/><path d="M124 66Q131 44 145 58Q162 49 169 67Q181 76 169 90Q151 105 137 90Q119 91 124 66Z" fill="#cfc3e5"/></svg><span class="scene-label">示意 · 非仿真输出</span></div>
+<table class="overview-table"><tbody><tr><th>测试对象</th><td>默认耦合场景</td></tr><tr><th>目标帧数</th><td id="overview-frame">100</td></tr><tr><th>展示状态</th><td><span class="status-chip" id="overview-state">合成示例</span></td></tr><tr><th>物理步总耗时</th><td id="overview-total">—</td></tr><tr><th>平均每帧耗时</th><td id="overview-mean">—</td></tr></tbody></table>
+</div></section>
+<section class="card"><div class="card-header"><h3>关键指标（均值 / 总计）</h3></div>
+<div class="metrics-grid"><div class="metric"><div class="metric-label">◷ 平均每帧耗时</div><div class="metric-value"><span id="metric-mean">—</span><small>毫秒</small></div></div><div class="metric"><div class="metric-label">◇ 平均牛顿迭代</div><div class="metric-value"><span id="metric-newton-mean">—</span><small>次/帧</small></div></div><div class="metric"><div class="metric-label">◇ 平均 PCG 迭代</div><div class="metric-value"><span id="metric-pcg-mean">—</span><small>次/帧</small></div></div><div class="metric"><div class="metric-label">∑ 牛顿迭代总次数</div><div class="metric-value"><span id="metric-newton-total">—</span><small>次</small></div></div><div class="metric"><div class="metric-label">∑ PCG 迭代总次数</div><div class="metric-value"><span id="metric-pcg-total">—</span><small>次</small></div></div><div class="metric"><div class="metric-label">◇ 累计碰撞对计数</div><div class="metric-value"><span id="metric-collision-total">—</span><small>次</small></div></div></div>
+<div class="metrics-note">均值按帧计算；碰撞对计数沿用源码统计口径。</div></section>
+</div>
+<div class="analysis-row">
+<section class="card"><div class="card-header"><h3>性能分析</h3><span class="demo-source">示例曲线</span></div><div class="charts-grid">
+<div><div class="chart-title">帧耗时曲线</div><svg class="plot" viewBox="0 0 240 180" role="img" aria-label="合成帧耗时曲线，非实验数据"><path d="M31 17V146H229M31 114H229M31 82H229M31 50H229M31 18H229" stroke="#e0dbf0" fill="none"/><g text-anchor="end"><text x="26" y="150" data-time-y="0">0</text><text x="26" y="118" data-time-y="1">20</text><text x="26" y="86" data-time-y="2">40</text><text x="26" y="54" data-time-y="3">60</text><text x="26" y="22" data-time-y="4">80</text></g><text x="28" y="162">1</text><text x="212" y="162" id="time-last-frame">100</text><text x="165" y="178">帧序号</text><text x="33" y="12">耗时（毫秒）</text><polyline id="time-line" points="" stroke="#7950ea" stroke-width="2" fill="none"/><text x="79" y="91" id="time-empty" hidden>未采集数据</text></svg></div>
+<div><div class="chart-title">逐帧迭代次数曲线</div><svg class="plot" viewBox="0 0 240 180" role="img" aria-label="合成牛顿及 PCG 逐帧迭代曲线，非实验数据"><path d="M31 17V146H229M31 114H229M31 82H229M31 50H229M31 18H229" stroke="#e0dbf0" fill="none"/><g text-anchor="end"><text x="26" y="150" data-iteration-y="0">0</text><text x="26" y="118" data-iteration-y="1">25</text><text x="26" y="86" data-iteration-y="2">50</text><text x="26" y="54" data-iteration-y="3">75</text><text x="26" y="22" data-iteration-y="4">100</text></g><text x="28" y="162">1</text><text x="212" y="162" id="iteration-last-frame">100</text><text x="165" y="178">帧序号</text><text x="33" y="12">次数（次/帧）</text><polyline id="newton-line" points="" stroke="#a16aef" stroke-width="2" fill="none"/><polyline id="pcg-line" points="" stroke="#4467e7" stroke-width="2" fill="none"/><text x="79" y="91" id="iteration-empty" hidden>未采集数据</text></svg></div>
+</div><div class="legend"><span><i></i>牛顿迭代</span><span><i class="pcg"></i>PCG 迭代</span></div></section>
+<section class="card"><div class="card-header"><h3>分析结论</h3></div><div class="conclusion"><div class="conclusion-box"><h3 id="conclusion-title">合成演示说明</h3><ul><li id="conclusion-one">数据来自合成样例，不是实际仿真成绩。</li><li id="conclusion-two">用于预览耗时、迭代曲线和指标联动。</li><li id="conclusion-three">不据此评价性能优劣或数值正确性。</li></ul></div></div></section>
+</div>
+<div class="lower-row">
+<section class="card"><div class="card-header"><h3>详细数据（关键帧）</h3></div><div class="table-wrap"><table class="data"><thead><tr><th>帧号</th><th>耗时（毫秒）</th><th>牛顿迭代</th><th>PCG 迭代</th><th>碰撞对计数</th></tr></thead><tbody>
+<tr data-key-row="0"><td id="key-0-frame">—</td><td id="key-0-time">—</td><td id="key-0-newton">—</td><td id="key-0-pcg">—</td><td>未记录</td></tr>
+<tr data-key-row="1"><td id="key-1-frame">—</td><td id="key-1-time">—</td><td id="key-1-newton">—</td><td id="key-1-pcg">—</td><td>未记录</td></tr>
+<tr data-key-row="2"><td id="key-2-frame">—</td><td id="key-2-time">—</td><td id="key-2-newton">—</td><td id="key-2-pcg">—</td><td>未记录</td></tr>
+<tr data-key-row="3"><td id="key-3-frame">—</td><td id="key-3-time">—</td><td id="key-3-newton">—</td><td id="key-3-pcg">—</td><td>未记录</td></tr>
+<tr data-key-row="4"><td id="key-4-frame">—</td><td id="key-4-time">—</td><td id="key-4-newton">—</td><td id="key-4-pcg">—</td><td>未记录</td></tr>
+<tr data-key-row="5"><td id="key-5-frame">—</td><td id="key-5-time">—</td><td id="key-5-newton">—</td><td id="key-5-pcg">—</td><td>未记录</td></tr>
+</tbody></table></div><div class="data-foot">现有程序无逐帧碰撞计数时保留“未记录”，不从累计值反推。</div></section>
+<section class="card"><div class="card-header"><h3>运行日志（摘要）</h3><span class="demo-source">仅展示样式</span></div><pre class="log" id="log-summary">未载入进程日志。</pre></section>
+</div>
+<div class="dashboard-actions"><button class="button" type="button" data-route="reports">◇ 查看报告布局</button><button class="button" type="button" disabled>↓ 下载报告（PDF）</button><button class="button" type="button" disabled>↓ 导出数据（CSV）</button></div>
+</div></section>
+</section>
+
+<section class="page secondary" id="page-tasks" hidden>
+<div class="section-heading"><div><h2>基准任务</h2><p>从固定用例生成计划预览；此页面不会提交任务。</p></div><span class="badge gray">C0 · 默认耦合场景</span></div>
+<div class="card secondary-body"><div class="task-grid"><div class="task-choice"><h3>短程检查 · 20 帧</h3><p>用于检查流程与证据完整性。</p><button type="button" class="button" data-case="20">预览 20 帧计划</button></div><div class="task-choice"><h3>标准评测 · 50 帧</h3><p>固定中等长度的评测用例。</p><button type="button" class="button" data-case="50">预览 50 帧计划</button></div><div class="task-choice"><h3>扩展检查 · 100 帧</h3><p>检查较长运行的持续完成情况。</p><button type="button" class="button" data-case="100">预览 100 帧计划</button></div></div><p class="small muted" style="margin-top:20px">正式产品仍支持 20 / 50 / 100 帧标准套件。当前原型只预览所选单项的对话和结果布局。</p></div>
+</section>
+
+<section class="page secondary" id="page-history" hidden>
+<div class="section-heading"><div><h2>运行记录</h2><p>正式产品将只读加载已有归档；查看记录不重新运行。</p></div><span class="badge gray">原型未加载历史目录</span></div>
+<div class="card"><div class="card-header"><h3>历史任务</h3></div><div class="table-wrap"><table class="data"><thead><tr><th>运行标识</th><th>创建时间</th><th>目标帧数</th><th>执行状态</th><th>校验结论</th><th>报告</th></tr></thead></table></div><div class="empty">当前只预览页面结构，未读取真实记录，也未创建新任务。</div></div>
+</section>
+
+<section class="page secondary" id="page-reports" hidden>
+<div class="section-heading"><div><h2>测试报告</h2><p id="report-source">合成数据展示 · 不是实际实验报告</p></div><div><button type="button" class="button" disabled>导出 Markdown</button> <button type="button" class="button" disabled>导出 PDF</button></div></div>
+<div class="card secondary-body">
+<div class="report-tabs" role="tablist" aria-label="报告详情"><button type="button" class="active" data-report-tab="summary" id="tab-summary" role="tab" aria-selected="true" aria-controls="report-summary-panel">概览</button><button type="button" data-report-tab="configuration" id="tab-configuration" role="tab" aria-selected="false" aria-controls="report-configuration-panel">运行配置</button><button type="button" data-report-tab="checks" id="tab-checks" role="tab" aria-selected="false" aria-controls="report-checks-panel">详细指标与检查</button><button type="button" data-report-tab="logs" id="tab-logs" role="tab" aria-selected="false" aria-controls="report-logs-panel">日志与异常</button></div>
+<div data-report-panel="summary" id="report-summary-panel" role="tabpanel" aria-labelledby="tab-summary"><div class="report-notice" id="report-notice">合成演示仅用于确认布局，不产生真实性能结论。</div><div class="readonly-row"><span>计划场景</span><strong>默认耦合场景 · Scene 1</strong></div><div class="readonly-row"><span>目标帧数</span><strong id="report-frame">100</strong></div><div class="readonly-row"><span>物理步总耗时</span><strong id="report-total">—</strong></div><div class="readonly-row"><span>平均每帧耗时</span><strong id="report-mean">—</strong></div><div class="readonly-row"><span>模型辅助解释</span><strong>待接入，不改变确定性结论</strong></div></div>
+<div data-report-panel="configuration" id="report-configuration-panel" role="tabpanel" aria-labelledby="tab-configuration" hidden><div class="readonly-row"><span>共用实现</span><strong>3a45087f</strong></div><div class="readonly-row"><span>固定算法配置</span><strong>残差补偿 TOI + 双段 Graph + indexed</strong></div><div class="readonly-row"><span>TOI / 残差阈值</span><strong>0.001 / 0.03</strong></div><div class="readonly-row"><span>EXE、GPU 和实际生效参数</span><strong>未载入真实归档</strong></div></div>
+<div data-report-panel="checks" id="report-checks-panel" role="tabpanel" aria-labelledby="tab-checks" hidden><div class="report-notice">不根据演示曲线补造检查通过记录。正式产品复用已有逐项校验清单。</div><table class="data"><thead><tr><th>编号</th><th>检查项</th><th>期望值</th><th>实际值</th><th>结论</th><th>证据路径</th></tr></thead></table><div class="empty">未载入真实检查清单。</div></div>
+<div data-report-panel="logs" id="report-logs-panel" role="tabpanel" aria-labelledby="tab-logs" hidden><pre class="log">未载入真实进程日志。智能测试页中的摘要仅为合成演示文案。</pre></div>
+</div></section>
+
+<section class="page secondary" id="page-profiles" hidden>
+<div class="section-heading"><div><h2>配置管理</h2><p>固定算法配置与参数快照只读，不从对话修改求解参数。</p></div><span class="badge">固定 C0</span></div>
+<div class="card secondary-body"><div class="readonly-row"><span>工程路径</span><strong>D:\benchagent</strong></div><div class="readonly-row"><span>停止策略</span><strong>双容差残差补偿 TOI</strong></div><div class="readonly-row"><span>TOI / 归一化残差阈值</span><strong>0.001 / 0.03</strong></div><div class="readonly-row"><span>最少接受更新数</span><strong>6</strong></div><div class="readonly-row"><span>牛顿 / PCG 容差倍率</span><strong>1 / 1</strong></div><div class="readonly-row"><span>执行优化</span><strong>双段 Graph + indexed</strong></div><div class="readonly-row"><span>时间步、摩擦、求解器实际容差</span><strong>正式运行时从快照和实际配置核对</strong></div><div class="report-notice" style="margin-top:18px">图中“修改 PCG 容差”的示例不会作为本阶段可执行功能；当前仅允许固定帧数的规则计划预览。</div></div>
+</section>
+
+<section class="page secondary" id="page-settings" hidden>
+<div class="section-heading"><div><h2>系统设置</h2><p>模型接口先预留，真实服务在后续阶段接入。</p></div></div>
+<div class="card"><div class="card-header"><h3>模型与环境状态</h3></div><div class="secondary-body"><div class="readonly-row"><span>模型状态</span><strong>待接入 · 默认禁用</strong></div><div class="readonly-row"><span>供应商与模型名称</span><strong>后续配置</strong></div><div class="readonly-row"><span>预留能力</span><strong>候选计划 / 报告辅助解释</strong></div><div class="readonly-row"><span>本原型的凭据读取与网络请求</span><strong>均不执行</strong></div><div class="readonly-row"><span>实际 GPU / CUDA 环境</span><strong>未加载，不能使用参考图中的环境值</strong></div><div style="margin-top:20px"><button class="button" type="button" disabled>配置模型（后续）</button> <button class="button" type="button" disabled>连接检查（后续）</button></div></div></div>
+</section>
+</main>
+</div>
+<script src="benchagent-v3-1.js"></script>
+</body></html>

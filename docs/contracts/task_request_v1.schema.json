@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "BenchAgent V3 task request (design contract)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "request_id",
+    "mode",
+    "scene",
+    "backend_id",
+    "task_frames",
+    "timeout_sec"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "task-request-v1"
+    },
+    "request_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+    },
+    "mode": {
+      "enum": [
+        "standard",
+        "custom"
+      ]
+    },
+    "scene": {
+      "const": "default"
+    },
+    "backend_id": {
+      "const": "c0-003-benchagent-v1"
+    },
+    "task_frames": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 3,
+      "uniqueItems": true,
+      "items": {
+        "type": "integer",
+        "enum": [
+          20,
+          50,
+          100
+        ]
+      }
+    },
+    "timeout_sec": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 86400
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "mode": {
+            "const": "standard"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "task_frames": {
+            "minItems": 3,
+            "maxItems": 3
+          }
+        }
+      }
+    }
+  ]
+}

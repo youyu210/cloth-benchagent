@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BenchAgent · V3 设计预览</title>
+<style>
+:root{--ink:#22243f;--sub:#777b92;--purple:#6554e8;--line:#e7e8f1;--wash:#f6f4ff}
+*{box-sizing:border-box}body{margin:0;background:#eceef5;color:var(--ink);font:14px/1.6 "Segoe UI","Microsoft YaHei",sans-serif}
+button,input,select{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;color:#9696aa!important;background:#f2f3f7!important;border-color:#e5e6ed!important;box-shadow:none!important}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #afa5ff;outline-offset:3px}
+.strip{max-width:1440px;margin:18px auto 12px;padding:0 18px;display:flex;gap:16px;flex-wrap:wrap;color:var(--sub);font-size:13px}.strip strong{color:var(--purple)}
+.app{max-width:1440px;margin:0 auto 24px;display:grid;grid-template-columns:210px minmax(0,1fr);min-height:850px;background:#f6f7fb;border:1px solid #dddfea;border-radius:18px;overflow:hidden;box-shadow:0 14px 45px #2525410d}
+.sidebar{background:linear-gradient(165deg,#2a2949,#20213b);color:#eeedf9;padding:28px 15px;display:flex;flex-direction:column}
+.brand{display:flex;align-items:center;gap:12px;padding:0 9px 30px;font-size:16px;font-weight:650;line-height:1.3}.brand .symbol{font-size:27px;color:#b5acff}.brand small{display:block;color:#aaa8cb;font-size:12px;font-weight:400;margin-top:7px}
+.nav{display:flex;flex-direction:column;gap:6px}.nav button{background:none;border:0;color:#cbcbe0;text-align:left;padding:12px 16px;border-radius:9px}.nav button:hover{background:#ffffff0a}.nav button.active{background:var(--purple);color:#fff}
+.nav button span{display:inline-block;width:30px;font-size:17px}.sidebar-bottom{margin-top:auto;padding:30px 10px 0;font-size:12px;color:#aaa8cb}.sidebar-bottom b{display:block;color:#e2dcff;font-weight:500;margin:4px 0}
+.main{min-width:0}.topbar{height:74px;background:#ffffffdc;border-bottom:1px solid var(--line);padding:0 30px;display:flex;justify-content:space-between;align-items:center;gap:15px}
+.crumb{font-size:13px;color:var(--sub)}.crumb b{color:var(--ink);font-weight:600}.tags,.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.tag{background:#f1eefc;color:#7561b3;padding:4px 10px;border-radius:6px;font-size:12px}.tag.gray{background:#f0f1f6;color:#85869a}
+.content{padding:28px 30px 32px;max-width:1240px;margin:auto}.page[hidden],.tabs[hidden],.report-tab[hidden]{display:none!important}
+h1,h2,h3,p{margin:0}h1{font-size:25px;font-weight:650;line-height:1.4;letter-spacing:-.5px}h2{font-size:17px;font-weight:650}h3{font-size:14px;font-weight:600}
+.sub{color:var(--sub);font-size:13px;margin-top:6px}.help{font-size:12px;color:var(--sub);margin-top:8px}
+.heading,.panel-title,.toolbar{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:22px;flex-wrap:wrap}.heading{align-items:flex-start}
+.button{border:1px solid #dcddec;background:white;color:var(--ink);padding:9px 16px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:13px}.button.primary{background:var(--purple);color:white;border-color:var(--purple);box-shadow:0 4px 10px #6554e824}
+.panel{background:white;border:1px solid var(--line);border-radius:13px;padding:22px}.two{display:grid;grid-template-columns:1.35fr .85fr;gap:20px}.home-lower{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:26px;align-items:center;min-height:385px;padding:32px;background:linear-gradient(130deg,white,#faf9ff)}
+.hero h1{font-size:33px;line-height:1.35;letter-spacing:-1px;margin:13px 0}.hero p{color:var(--sub);max-width:390px}.hero .actions{margin-top:26px}.kicker{font-size:12px;letter-spacing:1.3px;color:var(--purple);font-weight:600}
+.feature{font-size:13px;color:#60647d;margin-top:12px}.feature b{color:var(--purple);margin-right:10px;font-weight:500}
+.scene{position:relative;min-height:250px;background:linear-gradient(145deg,#363752,#77758d);border-radius:12px;overflow:hidden}.scene svg{display:block;width:100%;height:250px}.scene-label{position:absolute;bottom:12px;left:12px;color:#f0eff9;background:#1a1b3470;padding:4px 8px;font-size:11px;border-radius:4px}
+.line{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px solid #f0f0f7;font-size:13px}.line:last-child{border:0}.line span{color:var(--sub)}.line strong{font-weight:500;text-align:right}
+.empty{border:1px dashed #dfe1ef;border-radius:8px;padding:24px;text-align:center;color:var(--sub);background:#fcfcff;font-size:13px}
+.tabs,.report-tabs{display:flex;gap:23px;border-bottom:1px solid var(--line);margin:0 0 24px}.tabs button,.report-tabs button{background:none;border:0;border-bottom:3px solid transparent;padding:10px 0 13px;color:var(--sub);font-size:13px}.tabs button.active,.report-tabs button.active{border-color:var(--purple);color:var(--purple)}
+.field{margin-bottom:22px}.label{font-weight:600;font-size:13px;display:block;margin-bottom:10px}.segmented{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:23px}
+.choice{padding:14px;border:1px solid var(--line);border-radius:9px;background:white;color:var(--ink);text-align:left}.choice strong{display:block;font-weight:600}.choice small{display:block;color:var(--sub);font-size:12px;margin-top:4px}.choice.active{background:#f5f3ff;border-color:var(--purple);box-shadow:inset 0 0 0 1px var(--purple)}
+.readonly{padding:11px 13px;background:#f8f9fc;border:1px solid var(--line);border-radius:8px;display:flex;justify-content:space-between;gap:10px;color:#71758b;font-size:13px}
+.frame-options{display:flex;gap:12px;flex-wrap:wrap}.frame-options label{padding:10px 17px;border:1px solid var(--line);border-radius:8px;display:flex;gap:9px;align-items:center}.frame-options input{accent-color:var(--purple);width:16px;height:16px}
+select,input[type=number]{padding:9px 12px;border:1px solid #dcdeed;border-radius:7px;background:white;color:var(--ink)}input[type=number]{width:150px}
+details{border:1px solid var(--line);border-radius:9px;padding:13px 16px;margin-top:20px}summary{font-weight:600;font-size:13px;cursor:pointer}.parameter-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.parameter-grid div{font-size:12px;color:var(--sub);background:#f7f8fb;padding:9px 11px;border-radius:6px}.parameter-grid b{display:block;color:var(--ink);font-weight:500;margin-top:3px}
+.plan{background:#f8f7ff;border:1px solid #e6e1fe;border-radius:9px;padding:18px;margin-bottom:18px}.plan h3{margin-bottom:12px}.plan p{font-size:13px;color:#76718c;margin-top:7px}
+.note{font-size:12px;line-height:1.7;color:#7c739d;background:#f7f5ff;border-radius:7px;padding:12px;margin-top:16px}.footer-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:22px;flex-wrap:wrap}
+.stages{display:flex;justify-content:space-between;gap:8px;padding:20px 4px 28px}.stage{flex:1;position:relative;text-align:center;color:#9294a9;font-size:12px}.stage:before{content:"";position:absolute;height:2px;width:100%;left:-50%;top:15px;background:#e8e8f2}.stage:first-child:before{display:none}.stage em{font-style:normal;position:relative;z-index:1;width:30px;height:30px;border:5px solid white;background:#efedf9;color:#8e85ad;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 8px}.stage.active{color:var(--purple)}.stage.active em{background:var(--purple);color:white}
+.monitor{display:grid;grid-template-columns:230px minmax(0,1fr);gap:24px;align-items:center}.monitor .scene{min-height:210px}.monitor .scene svg{height:210px}.progress-label{display:flex;justify-content:space-between;gap:12px;color:var(--sub);font-size:13px;margin:18px 0 8px}.progress{height:9px;background:#efedf9;border-radius:5px;overflow:hidden}.progress span{height:100%;width:0;background:var(--purple);display:block}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px}.facts span{font-size:12px;color:var(--sub)}.facts b{display:block;margin-top:4px;font-size:17px;font-weight:600}
+.log{margin-top:18px;border:1px solid var(--line);border-radius:8px;background:#f8f9fd;min-height:165px;padding:18px;color:#8b8fa3;font:12px/1.8 Consolas,"Microsoft YaHei",monospace}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:22px}.stat{background:white;border:1px solid var(--line);border-radius:11px;padding:18px}.stat .name{font-size:12px;color:#73778f}.stat .value{font-size:29px;font-weight:650;margin-top:10px;line-height:1.4}.stat .value small{font-size:12px;font-weight:400;color:var(--sub);margin-left:6px}.stat .caption{font-size:11px;color:#9295a9;margin-top:8px}
+.result-grid{display:grid;grid-template-columns:.85fr 1.3fr;gap:20px}.chart{height:245px;width:100%}.chart text{font:12px "Microsoft YaHei",sans-serif;fill:#8a8da3}
+.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap}th{font-weight:500;color:#7a7d94;background:#fafaff;text-align:left;padding:11px 10px;border-bottom:1px solid var(--line)}td{padding:13px 10px;border-bottom:1px solid #f0f1f7}tr:last-child td{border:0}.selected td{background:#f6f3ff}.status{font-size:11px;background:#f1f2f7;color:#86899e;border-radius:4px;padding:3px 7px}
+.notice{background:#f3f1fe;border-radius:9px;padding:14px 17px;color:#7767ab;margin-bottom:22px;font-size:13px}.report-panels{display:grid;grid-template-columns:1fr 1fr;gap:20px}.model-placeholder{background:#faf9ff;border-color:#e3def9;margin-top:20px}
+.big-empty{text-align:center;color:var(--sub);padding:65px 20px}.big-empty .symbol{font-size:34px;color:#b5afcf}.big-empty p{font-size:13px;margin:8px 0 22px}
+.setting-row{display:flex;align-items:center;justify-content:space-between;gap:20px;border-bottom:1px solid #f0f0f7;padding:17px 0}.setting-row:last-child{border:0}.setting-row p{font-size:12px;color:var(--sub);margin-top:5px}
+.page-foot{color:#9497ac;font-size:11px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:24px}
+@media(max-width:1050px){.app{margin:0 12px 20px;grid-template-columns:178px minmax(0,1fr)}.content{padding:24px 22px}.topbar{padding:0 22px}.two,.result-grid{grid-template-columns:1fr}.hero{padding:25px;gap:18px}.hero h1{font-size:28px}.cards{gap:11px}.stat{padding:14px}.stat .value{font-size:25px}}
+@media(max-width:730px){.app{grid-template-columns:1fr}.sidebar{padding:15px}.brand{padding:0 0 14px}.brand small,.sidebar-bottom{display:none}.nav{flex-direction:row;overflow:auto;gap:3px}.nav button{padding:10px 12px;white-space:nowrap}.nav button span{display:none}.topbar{height:auto;min-height:64px;padding:12px 18px;flex-wrap:wrap}.content{padding:22px 18px}.hero{grid-template-columns:1fr}.hero .scene,.monitor .scene{display:none}.home-lower,.report-panels,.monitor{grid-template-columns:1fr}.cards{grid-template-columns:1fr 1fr}.parameter-grid{grid-template-columns:1fr}.stage{font-size:11px}.strip{font-size:12px}.heading{flex-wrap:wrap}.readonly{flex-wrap:wrap}}
+</style>
+</head><body>
+<div class="strip"><strong>V3 交互设计稿</strong><span>仅展示页面与交互 · 不连接仿真或模型 · 无实验数据</span></div>
+<div class="app">
+<aside class="sidebar">
+<div class="brand"><span class="symbol">◇</span><div>StiffGIPC<br>BenchAgent<small>可复核的仿真评测</small></div></div>
+<nav class="nav" aria-label="主导航">
+<button type="button" data-route="home" data-nav="home" class="active"><span>⌂</span>首页</button>
+<button type="button" data-route="config" data-nav="benchmark"><span>◈</span>基准测试</button>
+<button type="button" data-route="history" data-nav="history"><span>≡</span>测试记录</button>
+<button type="button" data-route="reports" data-nav="reports"><span>▤</span>报告管理</button>
+<button type="button" data-route="settings" data-nav="settings"><span>⚙</span>系统设置</button>
+</nav>
+<div class="sidebar-bottom">当前基线<b>C0 · 双容差补偿 TOI</b><code>3a45087f</code><div style="margin-top:18px">本地工作区<br>D:\benchagent</div></div>
+</aside>
+<main class="main"><header class="topbar"><div class="crumb">工作台　/　<b id="current-page">首页</b></div><div class="tags"><span class="tag">默认耦合场景 · Scene 1</span><span class="tag gray">模型待接入</span></div></header>
+<div class="content">
+<div class="tabs" id="bench-tabs" hidden><button type="button" data-route="config">任务配置</button><button type="button" data-route="running">执行监控</button><button type="button" data-route="results">结果概览</button></div>
+<section class="page" id="page-home">
+<div class="hero panel"><div><div class="kicker">STIFFGIPC · BENCHAGENT</div><h1>让每一次仿真评测<br>都有清晰的证据。</h1><p>固定场景与配置，自动整理耗时、迭代和异常，形成可查看、可追溯的中文报告。</p><div class="feature"><b>✓</b>20 / 50 / 100 帧固定用例</div><div class="feature"><b>✓</b>确定性检查与中文分析表格</div><div class="feature"><b>✓</b>指标、日志与报告一处查看</div><div class="actions"><button class="button primary" type="button" data-route="config">创建基准测试 →</button><button class="button" type="button" data-route="history">查看测试记录</button></div></div>
+<div class="scene" aria-label="默认耦合场景概念示意，非仿真截图"><svg viewBox="0 0 370 250" role="img"><title>软体、刚体和布料概念示意</title><defs><linearGradient id="cloth-gradient" x2=".8" y2="1"><stop stop-color="#d1c2f7"/><stop offset="1" stop-color="#8275ba"/></linearGradient></defs><path d="M0 215 175 152 370 203 370 250 0 250Z" fill="#ffffff09"/><g stroke="#d5d3e52b" fill="none"><path d="M0 215 370 232M0 238 370 215M67 191 249 250M125 171 324 250M4 250 272 181"/></g><path d="M77 110 144 84 206 108 139 137Z" fill="#d9d8e8"/><path d="M77 110 139 137 139 200 77 173Z" fill="#a2a1b9"/><path d="M139 137 206 108 206 173 139 200Z" fill="#bcb7d3"/><path d="M180 118Q204 115 221 138Q231 146 246 128L300 146Q288 190 316 202L257 219Q230 219 220 185Q208 158 181 173Z" fill="url(#cloth-gradient)"/><g fill="none" stroke="#e7ddff55"><path d="M197 120Q213 150 229 173Q237 201 270 215M216 135Q246 155 280 152M189 151Q222 142 262 171Q284 185 302 187"/></g><path d="M235 99Q251 74 271 91Q289 78 298 100Q319 107 305 130Q285 148 263 130Q239 133 235 113Z" fill="#c3b5eb"/></svg><span class="scene-label">默认耦合场景示意 · 非真实仿真画面</span></div></div>
+<div class="home-lower"><div class="panel"><div class="panel-title"><h2>固定评测配置</h2><span class="tag">C0</span></div><div class="line"><span>停止策略</span><strong>双容差残差补偿 TOI</strong></div><div class="line"><span>执行优化</span><strong>双段 Graph + indexed</strong></div><div class="line"><span>TOI / 残差阈值</span><strong>0.001 / 0.03</strong></div></div><div class="panel"><div class="panel-title"><h2>最近测试</h2><button class="button" type="button" data-route="history">查看全部</button></div><div class="empty">设计预览未载入历史记录<br>正式页面将读取已有归档</div></div></div>
+</section>
+<section class="page" id="page-config" hidden>
+<div class="heading"><div><h1>新建测试任务</h1><p class="sub">选择固定用例，预览计划后再运行。场景和求解配置保持一致。</p></div><span class="tag">固定 C0 配置</span></div>
+<div class="two"><div class="panel">
+<div class="label">测试类型</div><div class="segmented"><button class="choice active" type="button" id="standard-choice" aria-pressed="true"><strong>标准评测</strong><small>完整 20 / 50 / 100 帧套件</small></button><button class="choice" type="button" id="custom-choice" aria-pressed="false"><strong>自定义用例</strong><small>从固定帧数中选择子集</small></button></div>
+<div class="field"><div class="label">测试场景</div><div class="readonly">默认场景 · 软体—刚体—布料耦合 <span>固定 Scene 1</span></div></div>
+<div class="field"><div class="label">仿真帧数</div><div class="frame-options"><label><input type="checkbox" class="frame-check" value="20" checked disabled>20 帧</label><label><input type="checkbox" class="frame-check" value="50" checked disabled>50 帧</label><label><input type="checkbox" class="frame-check" value="100" checked disabled>100 帧</label></div><p class="help" id="frame-help">标准评测将按顺序独立运行三项用例。</p></div>
+<div class="field"><label class="label" for="timeout-input">每项任务超时上限</label><input id="timeout-input" type="number" min="1" max="86400" value="3600"> <span class="sub">秒</span><p class="help">超时仅用于异常保护，不作为性能是否合格的标准。</p></div>
+<details><summary>固定参数快照 · 只读</summary><div class="parameter-grid"><div>时间步长（参数文件）<b>0.01 秒</b></div><div>摩擦系数（参数文件）<b>0.2</b></div><div>PCG 容差（参数文件）<b>1e-4</b></div><div>牛顿容差（参数文件）<b>1e-2</b></div><div>TOI 阈值（C0）<b>0.001</b></div><div>归一化残差阈值（C0）<b>0.03</b></div></div><p class="help">运行后以记录的实际生效参数核对。此处不开放物理参数修改。</p></details>
+</div><div><div class="panel"><h2 style="margin-bottom:18px">任务计划</h2><div class="plan"><h3 id="plan-mode">标准评测</h3><p>场景：默认耦合场景</p><p>用例：<strong id="plan-frames">20 / 50 / 100 帧</strong></p><p>总目标：<strong id="plan-total">170 帧</strong></p><p>执行方式：每项从相同初态独立启动</p></div><div class="line"><span>模型服务</span><strong>待接入，不影响表单操作</strong></div><div class="line"><span>原始证据</span><strong>独立目录归档</strong></div><div class="note">本页是交互设计预览。下方按钮仅切换页面，不提交任务。</div><div class="footer-actions"><button class="button primary" type="button" data-route="running" id="preview-run-button">查看执行页 →</button></div></div></div></div>
+</section>
+<section class="page" id="page-running" hidden>
+<div class="heading"><div><h1>执行与进度监控</h1><p class="sub">阶段、逐帧进度和最终校验结论分别记录。</p></div><span class="tag gray">运行视图预览</span></div>
+<div class="panel"><div class="stages"><div class="stage"><em>1</em>环境检查</div><div class="stage"><em>2</em>准备配置</div><div class="stage active"><em>3</em>运行仿真</div><div class="stage"><em>4</em>分析与校验</div><div class="stage"><em>5</em>生成报告</div></div>
+<div class="monitor"><div class="scene"><svg viewBox="0 0 300 210" role="img"><title>场景静态示意</title><path d="M0 180 160 124 300 176 300 210 0 210Z" fill="#ffffff0b"/><path d="M55 96 119 71 178 94 114 121Z" fill="#d3cfe5"/><path d="M55 96 114 121 114 174 55 148Z" fill="#a49bbd"/><path d="M114 121 178 94 178 149 114 174Z" fill="#bcb1d5"/><path d="M157 106Q191 106 205 130L250 125Q233 164 261 177L211 191Q186 179 183 156Q176 139 154 151Z" fill="#b2a1d8"/></svg><span class="scene-label">静态示意 · 非实时画面</span></div>
+<div><h2>等待真实任务数据</h2><p class="sub">设计预览不会启动仿真，也不会生成模拟进度。</p><div class="progress-label"><span>当前用例进度</span><span>尚未执行</span></div><div class="progress" role="progressbar" aria-label="未执行任务" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div><div class="facts"><div><span>已确认帧数</span><b>—</b></div><div><span>已用时间</span><b>—</b></div><div><span>预计剩余</span><b>暂不可用</b></div></div><p class="help">正式进度依据完整逐帧记录更新；帧完成后还需校验与生成报告。</p></div></div>
+<div class="panel-title" style="margin:24px 0 0"><h3>运行日志</h3><span class="tag gray">标准输出 / 错误输出</span></div><div class="log">尚未载入运行日志。<br>真实任务开始后，此处展示归档日志并支持尾部跟随。</div>
+<div class="footer-actions"><button class="button" type="button" disabled>取消任务</button><button class="button primary" type="button" data-route="results">查看结果布局 →</button></div></div>
+</section>
+<section class="page" id="page-results" hidden>
+<div class="heading"><div><h1>测试结果概览</h1><p class="sub">查看当前选中用例的指标，逐项追溯结论依据。</p></div><div class="actions"><button class="button" type="button" disabled>下载证据包</button><button class="button primary" type="button" data-route="report">查看报告布局 →</button></div></div>
+<div class="toolbar"><span class="tag gray">未载入评测结果 · 无实验数据</span><label>当前用例　<select id="result-case" aria-label="当前结果用例"><option value="20">20 帧</option><option value="50">50 帧</option><option value="100" selected>100 帧</option></select></label></div>
+<div class="cards"><div class="stat"><div class="name">平均每帧物理步耗时</div><div class="value">—<small>毫秒 / 帧</small></div><div class="caption">当前选中：<span data-selected-frame>100</span> 帧</div></div><div class="stat"><div class="name">平均每帧牛顿迭代</div><div class="value">—<small>次 / 帧</small></div><div class="caption">牛顿总次数 ÷ 实际帧数</div></div><div class="stat"><div class="name">平均每次 PCG 求解迭代</div><div class="value">—<small>次 / 求解</small></div><div class="caption">聚合迭代数 ÷ 求解调用数</div></div><div class="stat"><div class="name">校验通过任务数</div><div class="value">—<small>/ 所选任务</small></div><div class="caption">与进程结束、帧进度分开</div></div></div>
+<div class="result-grid"><div class="panel"><h2>逐帧物理步耗时 · <span data-selected-frame>100</span> 帧</h2><svg class="chart" viewBox="0 0 350 245" role="img" aria-label="无逐帧数据，未绘制曲线"><path d="M45 25V208H325" fill="none" stroke="#d9dcec"/><path d="M45 65H325M45 110H325M45 155H325" fill="none" stroke="#f0f1f8"/><text x="12" y="27">毫秒</text><text x="270" y="232">帧序号</text><text x="126" y="116">未采集到数据</text><text x="95" y="138">仅在有效记录存在时绘图</text></svg></div>
+<div class="panel"><div class="panel-title"><h2>各用例评测结果</h2><span class="sub">同场景 · 同配置</span></div><div class="table-wrap"><table><thead><tr><th>目标帧数</th><th>实际帧数</th><th>总耗时（秒）</th><th>均帧耗时（毫秒）</th><th>状态</th></tr></thead><tbody><tr data-result-row="20"><td>20</td><td>—</td><td>—</td><td>—</td><td><span class="status">未执行</span></td></tr><tr data-result-row="50"><td>50</td><td>—</td><td>—</td><td>—</td><td><span class="status">未执行</span></td></tr><tr data-result-row="100" class="selected"><td>100</td><td>—</td><td>—</td><td>—</td><td><span class="status">未执行</span></td></tr></tbody></table></div><div class="note">完整报告包含牛顿 / PCG 明细、覆盖率、异常分类与逐项检查。空数据不补为零。</div><button class="button" style="margin-top:18px" type="button" data-route="report">查看逐项校验布局 →</button></div></div>
+</section>
+<section class="page" id="page-history" hidden>
+<div class="heading"><div><h1>测试记录</h1><p class="sub">按执行任务查看状态、计划与原始证据。</p></div><button class="button primary" type="button" data-route="config">创建任务</button></div>
+<div class="panel"><div class="toolbar"><h2>任务归档</h2><span class="tag gray">设计预览未加载历史目录</span></div><div class="table-wrap"><table><thead><tr><th>任务</th><th>创建时间</th><th>场景</th><th>目标帧数</th><th>执行状态</th><th>报告</th></tr></thead></table></div><div class="big-empty"><div class="symbol">≡</div><h3>等待载入已有记录</h3><p>正式页面将兼容现有归档；查看记录不会重新运行任务。</p><button class="button" type="button" data-route="report">预览报告详情</button></div></div>
+</section>
+<section class="page" id="page-reports" hidden>
+<div class="heading"><div><h1>报告管理</h1><p class="sub">统一查看确定性结论、中文分析与证据文件。</p></div><span class="tag gray">只读回放</span></div>
+<div class="panel"><div class="panel-title"><h2>已归档报告</h2><span class="sub">单项报告 / 套件汇总</span></div><div class="big-empty"><div class="symbol">▤</div><h3>尚未载入报告索引</h3><p>设计稿不读取真实报告，也不填充虚构成绩。</p><button class="button primary" type="button" data-route="report">查看报告布局 →</button></div></div>
+</section>
+<section class="page" id="page-report" hidden>
+<div class="heading"><div><h1>测试报告</h1><p class="sub">固定配置 · 确定性校验 · 可追溯证据</p></div><div class="actions"><button class="button" type="button" disabled>导出 Markdown</button><button class="button" type="button" disabled>导出 PDF · 后续提供</button></div></div>
+<div class="report-tabs" role="tablist" aria-label="报告详情"><button type="button" data-report-tab="overview" class="active" role="tab" aria-selected="true" aria-controls="report-overview" id="tab-overview">概览</button><button type="button" data-report-tab="configuration" role="tab" aria-selected="false" aria-controls="report-configuration" id="tab-configuration">运行配置</button><button type="button" data-report-tab="metrics" role="tab" aria-selected="false" aria-controls="report-metrics" id="tab-metrics">详细指标</button><button type="button" data-report-tab="logs" role="tab" aria-selected="false" aria-controls="report-logs" id="tab-logs">日志与异常</button></div>
+<div class="report-tab" id="report-overview" role="tabpanel" aria-labelledby="tab-overview"><div class="notice">尚未选择已有报告。此处不预设“通过”，也不生成测试结论。</div>
+<div class="report-panels"><div class="panel"><h2 style="margin-bottom:12px">任务信息</h2><div class="line"><span>测试对象</span><strong>固定 C0 实现 · 3a45087f</strong></div><div class="line"><span>测试场景</span><strong>默认耦合场景 · Scene 1</strong></div><div class="line"><span>任务与运行时间</span><strong>未载入</strong></div><div class="line"><span>GPU 与环境信息</span><strong>未载入</strong></div></div>
+<div class="panel"><h2 style="margin-bottom:12px">主要指标</h2><div class="line"><span>物理步总耗时（秒）</span><strong>未采集</strong></div><div class="line"><span>平均每帧耗时（毫秒）</span><strong>未采集</strong></div><div class="line"><span>平均牛顿 / PCG 迭代</span><strong>未采集</strong></div><div class="line"><span>PCG 明细覆盖率</span><strong>未采集</strong></div></div></div>
+<div class="panel model-placeholder"><div class="panel-title" style="margin-bottom:5px"><h3>模型辅助解释</h3><span class="tag">待接入</span></div><p class="sub">后续可解释已保存的指标与异常；确定性结论始终由验证器提供。</p></div></div>
+<div class="report-tab" id="report-configuration" role="tabpanel" aria-labelledby="tab-configuration" hidden><div class="panel"><h2>固定 C0 配置参考</h2><div class="line"><span>停止策略</span><strong>双容差残差补偿 TOI</strong></div><div class="line"><span>TOI / 残差阈值</span><strong>0.001 / 0.03</strong></div><div class="line"><span>最少接受更新数</span><strong>6</strong></div><div class="line"><span>执行优化</span><strong>双段 Graph + indexed</strong></div><div class="line"><span>实际 EXE / 配置哈希</span><strong>从选中报告读取</strong></div><p class="help">此处是计划中的固定配置；运行后实际生效参数需要从归档读取。</p></div></div>
+<div class="report-tab" id="report-metrics" role="tabpanel" aria-labelledby="tab-metrics" hidden><div class="panel"><h2>逐项检查与详细数据</h2><div class="table-wrap" style="margin-top:17px"><table><thead><tr><th>编号</th><th>检查项</th><th>结论</th><th>期望值</th><th>实际值</th><th>证据路径</th></tr></thead><tbody><tr><td colspan="6" style="text-align:center;padding:45px;color:#9093a8">尚未载入检查清单；不补判通过。</td></tr></tbody></table></div><div class="note">指标名称和单位使用中文；机器可读字段与原始判定保留。</div></div></div>
+<div class="report-tab" id="report-logs" role="tabpanel" aria-labelledby="tab-logs" hidden><div class="panel"><h2>日志与异常</h2><div class="log">尚未载入归档日志。<br>正式报告将区分退出异常、超时、证据缺失和非关键告警。</div></div></div>
+</section>
+<section class="page" id="page-settings" hidden>
+<div class="heading"><div><h1>系统设置</h1><p class="sub">查看本地配置、执行保护与预留能力。</p></div></div>
+<div class="panel"><h2>本地环境与执行保护</h2><div class="setting-row"><div><h3>工程工作区</h3><p>D:\benchagent</p></div><span class="tag gray">本地项目</span></div><div class="setting-row"><div><h3>固定实现版本</h3><p>C0 · 3a45087f · 默认耦合场景</p></div><span class="tag">只读配置</span></div><div class="setting-row"><div><h3>环境检查与 GPU 身份</h3><p>正式页面按需检查并记录时间；原型不会执行环境检查。</p></div><button class="button" type="button" disabled>检查环境</button></div></div>
+<div class="panel model-placeholder"><div class="panel-title"><h2>模型接口</h2><span class="tag">待接入</span></div><div class="setting-row"><div><h3>自然语言任务计划</h3><p>后续生成受限候选计划，仍需通过确定性校验。</p></div><button class="button" type="button" disabled>后续配置</button></div><div class="setting-row"><div><h3>报告辅助解释</h3><p>后续解释已有证据，不改变指标与通过/失败结论。</p></div><button class="button" type="button" disabled>连接检查</button></div><p class="help">当前接口默认禁用，不读取凭据、不发送请求。表单评测与报告功能独立可用。</p></div>
+</section>
+<div class="page-foot"><span>固定场景与配置 · 中文分析 · 原始证据可复核</span><span>设计预览 · 模型后续接入</span></div>
+</div></main></div>
+<script>
+(function(){
+'use strict';
+var pages=['home','config','running','results','history','reports','report','settings'];
+var titles={home:'首页',config:'任务配置',running:'执行监控',results:'结果概览',history:'测试记录',reports:'报告管理',report:'报告详情',settings:'系统设置'};
+var custom=false;
+function showPage(name){
+ if(pages.indexOf(name)<0){name='home';}
+ pages.forEach(function(p){document.getElementById('page-'+p).hidden=p!==name;});
+ var nav=['config','running','results'].indexOf(name)>=0?'benchmark':name==='report'?'reports':name;
+ document.querySelectorAll('[data-nav]').forEach(function(b){b.classList.toggle('active',b.dataset.nav===nav);if(b.dataset.nav===nav){b.setAttribute('aria-current','page');}else{b.removeAttribute('aria-current');}});
+ document.getElementById('bench-tabs').hidden=nav!=='benchmark';
+ document.querySelectorAll('#bench-tabs button').forEach(function(b){b.classList.toggle('active',b.dataset.route===name);});
+ document.getElementById('current-page').textContent=titles[name];
+ document.title=titles[name]+' · BenchAgent V3 设计预览';
+ history.replaceState(null,'','#'+name);
+}
+document.querySelectorAll('[data-route]').forEach(function(b){b.addEventListener('click',function(){showPage(b.dataset.route);});});
+function updatePlan(){
+ var selected=Array.from(document.querySelectorAll('.frame-check:checked')).map(function(el){return Number(el.value);});
+ document.getElementById('plan-mode').textContent=custom?'自定义用例':'标准评测';
+ document.getElementById('plan-frames').textContent=selected.length?selected.join(' / ')+' 帧':'请选择至少一项';
+ document.getElementById('plan-total').textContent=selected.reduce(function(a,b){return a+b;},0)+' 帧';
+ document.getElementById('preview-run-button').disabled=selected.length===0||!document.getElementById('timeout-input').checkValidity();
+ document.getElementById('frame-help').textContent=custom?'仅允许选择 20、50、100 帧；不开放任意帧数和物理参数。':'标准评测将按顺序独立运行三项用例。';
+}
+function setCustom(value){
+ custom=value;
+ document.getElementById('standard-choice').classList.toggle('active',!value);document.getElementById('custom-choice').classList.toggle('active',value);
+ document.getElementById('standard-choice').setAttribute('aria-pressed',String(!value));document.getElementById('custom-choice').setAttribute('aria-pressed',String(value));
+ document.querySelectorAll('.frame-check').forEach(function(input){input.disabled=!value;if(!value){input.checked=true;}});
+ updatePlan();
+}
+document.getElementById('standard-choice').addEventListener('click',function(){setCustom(false);});
+document.getElementById('custom-choice').addEventListener('click',function(){setCustom(true);});
+document.querySelectorAll('.frame-check').forEach(function(input){input.addEventListener('change',updatePlan);});
+document.getElementById('timeout-input').addEventListener('input',updatePlan);
+document.getElementById('result-case').addEventListener('change',function(){
+ var value=this.value;document.querySelectorAll('[data-selected-frame]').forEach(function(el){el.textContent=value;});document.querySelectorAll('[data-result-row]').forEach(function(el){el.classList.toggle('selected',el.dataset.resultRow===value);});
+});
+document.querySelectorAll('[data-report-tab]').forEach(function(button){button.addEventListener('click',function(){
+ var selected=button.dataset.reportTab;document.querySelectorAll('[data-report-tab]').forEach(function(b){b.classList.toggle('active',b===button);b.setAttribute('aria-selected',String(b===button));});document.querySelectorAll('.report-tab').forEach(function(panel){panel.hidden=panel.id!=='report-'+selected;});
+});});
+window.addEventListener('hashchange',function(){showPage(location.hash.slice(1));});
+updatePlan();showPage(location.hash.slice(1)||'home');
+})();
+</script>
+</body></html>

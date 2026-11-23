@@ -1,0 +1,4 @@
+# Sealed source and asset manifests validate exact SHA-256 bytes.
+# Disable automatic CRLF/LF rewriting on every platform, including text meshes.
+* -text
+*.py diff=python

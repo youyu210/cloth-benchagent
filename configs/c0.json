@@ -1,0 +1,33 @@
+{
+  "backend_id": "c0-003-benchagent-v1",
+  "base_commit": "c49982fac7767225c7775683734c89eb74081142",
+  "implementation_commit": "3a45087fdbd3b0f1ca6e12ef2de3ab91b0db42df",
+  "scene": 1,
+  "gpu": "0",
+  "timeout_sec": 3600,
+  "args": [
+    "--scene",
+    "1",
+    "--termination",
+    "compensated",
+    "--toi-min-updates",
+    "6",
+    "--toi-threshold",
+    "0.001",
+    "--residual-threshold",
+    "0.03",
+    "--residual-floor",
+    "1e-30",
+    "--pcg-dual-graph",
+    "--converter-indexed-reduce",
+    "--newton-tolerance-scale",
+    "1",
+    "--pcg-tolerance-scale",
+    "1",
+    "--production-measurement",
+    "--diagnostic-max-newton",
+    "2000",
+    "--diagnostic-max-ms",
+    "300000"
+  ]
+}

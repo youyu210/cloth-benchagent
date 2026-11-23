@@ -1,0 +1,213 @@
+{
+  "status": "FAIL",
+  "errors": [
+    "Process failed or timed out",
+    "Missing, duplicate or incorrect completion marker"
+  ],
+  "warnings": [],
+  "quality_status": "NOT_ASSESSED",
+  "checks_schema": "benchagent-checks-v1",
+  "checks": [
+    {
+      "id": "V01",
+      "name": "进程正常结束",
+      "required": true,
+      "status": "FAIL",
+      "expected": {
+        "returncode": 0,
+        "timeout": false
+      },
+      "actual": {
+        "returncode": -9,
+        "timeout": true
+      },
+      "evidence": [
+        "run_meta.json"
+      ],
+      "message": "检查未通过",
+      "details": [
+        "Process failed or timed out"
+      ]
+    },
+    {
+      "id": "V02",
+      "name": "唯一完成标记",
+      "required": true,
+      "status": "FAIL",
+      "expected": {
+        "completion_frames": [
+          "20"
+        ]
+      },
+      "actual": {
+        "completion_frames": []
+      },
+      "evidence": [
+        "stdout.log",
+        "plan.json"
+      ],
+      "message": "检查未通过",
+      "details": [
+        "Missing, duplicate or incorrect completion marker"
+      ]
+    },
+    {
+      "id": "V03",
+      "name": "实际帧数与连续帧序号",
+      "required": true,
+      "status": "SKIPPED",
+      "expected": "帧数符合计划且帧序号从 1 连续递增",
+      "actual": null,
+      "evidence": [
+        "raw/frames.csv",
+        "plan.json"
+      ],
+      "message": "缺少可解析的统计证据，未执行本项检查",
+      "details": []
+    },
+    {
+      "id": "V04",
+      "name": "程序完成状态",
+      "required": true,
+      "status": "SKIPPED",
+      "expected": "完成标志、有限状态标志及完成帧数均符合计划",
+      "actual": null,
+      "evidence": [
+        "raw/status.json",
+        "plan.json"
+      ],
+      "message": "缺少可解析的统计证据，未执行本项检查",
+      "details": []
+    },
+    {
+      "id": "V05",
+      "name": "文件新鲜度与运行身份",
+      "required": true,
+      "status": "PASS",
+      "expected": {
+        "fresh_output": true,
+        "identity_unchanged": true
+      },
+      "actual": {
+        "fresh_output": true,
+        "identity_unchanged": true
+      },
+      "evidence": [
+        "run_meta.json",
+        "identity_before.json",
+        "identity_after.json"
+      ],
+      "message": "检查通过",
+      "details": []
+    },
+    {
+      "id": "V06",
+      "name": "必需指标可读且数值合法",
+      "required": true,
+      "status": "SKIPPED",
+      "expected": "必需文件可解析；时间与计数有限且非负，单帧耗时为正",
+      "actual": null,
+      "evidence": [
+        "raw/frames.csv",
+        "raw/pcg_iterations.jsonl",
+        "raw/metadata.json",
+        "raw/status.json",
+        "raw/collision_summary.json"
+      ],
+      "message": "缺少可解析的统计证据，未执行本项检查",
+      "details": []
+    },
+    {
+      "id": "V07",
+      "name": "PCG 聚合与明细一致",
+      "required": true,
+      "status": "SKIPPED",
+      "expected": "帧号唯一且有效；完整明细与聚合计数相等，部分明细不超过聚合计数",
+      "actual": null,
+      "evidence": [
+        "raw/frames.csv",
+        "raw/pcg_iterations.jsonl"
+      ],
+      "message": "缺少可解析的统计证据，未执行本项检查",
+      "details": []
+    },
+    {
+      "id": "V08",
+      "name": "PCG 求解明细覆盖率",
+      "required": false,
+      "status": "SKIPPED",
+      "expected": "每次 PCG 调用均有明细；不完整时告警，不补零",
+      "actual": null,
+      "evidence": [
+        "raw/frames.csv",
+        "raw/pcg_iterations.jsonl"
+      ],
+      "message": "缺少可解析的统计证据，未执行本项检查",
+      "details": []
+    },
+    {
+      "id": "V09",
+      "name": "默认场景与初始状态",
+      "required": true,
+      "status": "SKIPPED",
+      "expected": {
+        "scene_no": 1,
+        "cloth_scene": "",
+        "initial_physical_frame": 0
+      },
+      "actual": null,
+      "evidence": [
+        "raw/metadata.json",
+        "plan.json"
+      ],
+      "message": "缺少可解析的统计证据，未执行本项检查",
+      "details": []
+    },
+    {
+      "id": "V10",
+      "name": "固定 C0 配置",
+      "required": true,
+      "status": "SKIPPED",
+      "expected": "固定基线、残差补偿 TOI、双段 Graph 与 indexed 配置全部匹配",
+      "actual": null,
+      "evidence": [
+        "raw/metadata.json",
+        "profile.json"
+      ],
+      "message": "缺少可解析的统计证据，未执行本项检查",
+      "details": []
+    },
+    {
+      "id": "V11",
+      "name": "状态有限且保护预算未触顶",
+      "required": true,
+      "status": "SKIPPED",
+      "expected": {
+        "nonfinite_vertices": 0,
+        "newton_cap_hits": 0,
+        "diagnostic_budget_hits": 0
+      },
+      "actual": null,
+      "evidence": [
+        "raw/frames.csv",
+        "raw/status.json"
+      ],
+      "message": "缺少可解析的统计证据，未执行本项检查",
+      "details": []
+    },
+    {
+      "id": "V12",
+      "name": "Graph 实际执行且无回退",
+      "required": true,
+      "status": "SKIPPED",
+      "expected": "方向图至少执行一次且所有帧均无 Graph 回退",
+      "actual": null,
+      "evidence": [
+        "raw/frames.csv"
+      ],
+      "message": "缺少可解析的统计证据，未执行本项检查",
+      "details": []
+    }
+  ],
+  "synthetic": true
+}

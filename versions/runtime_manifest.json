@@ -1,0 +1,18 @@
+{
+  "implementation_commit": "3a45087fdbd3b0f1ca6e12ef2de3ab91b0db42df",
+  "adaptation": "benchagent-observability-v1",
+  "built_at": "2026-11-02T02:20:59.726918+00:00",
+  "source_manifest_sha256": "c21db641ce62407105f258a4aaa746dc87bcf3382fb4908a9ddf9a612f244d12",
+  "files": {
+    "cublas64_12.dll": "01d8172b25d8e2d2cb6a276e76e719f5908c6124f484c8c8ca310fbe7b6634f3",
+    "cublasLt64_12.dll": "0d59d264782cec2782b9ac72483e53c9ba485a9d3a1e19b34071a17b8152102e",
+    "cusparse64_12.dll": "dffd92820ed8f36cd11f59aec998a7b8fb357a87c014496c193dde8b082b7b33",
+    "freeglut.dll": "ce969fe8554515a4ade246155f7d86507fb933d395d183de5146380a980f0f8d",
+    "gipc.exe": "027e254301e68822e1c0b6ece9b1cec2db677c142d2b0990224445c6a7d94b89",
+    "glew32.dll": "82533396ae0d3aa25a860028ec10c72c56fab9d3de0d941be488eb4d58d1e708",
+    "nvJitLink_120_0.dll": "5742a0e881d462ecffc4d208c71d6680fffc69aa9fd8e470fbac48d4487deac1"
+  },
+  "build_log": "build/build.log",
+  "dependency_manifest_sha256": "e3c69a337f3a6b1f6a7c114ef038d1882532165d494ebef188df14bc5ac8b531",
+  "toolchain_note": "CUDA 12.6, MSVC 14.44, explicit allow-unsupported-compiler; runtime untested"
+}

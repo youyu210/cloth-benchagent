@@ -1,0 +1,59 @@
+{
+  "schema_version": "model-gateway-v1",
+  "implementation_phase": "reserved-only",
+  "default_provider": "disabled",
+  "operations": {
+    "get_status": {
+      "response_fields": [
+        "enabled",
+        "ready",
+        "provider",
+        "capabilities",
+        "message",
+        "schema_version"
+      ]
+    },
+    "propose_plan": {
+      "request_fields": [
+        "request_id",
+        "user_text",
+        "locale"
+      ],
+      "response_type": "ModelResult",
+      "rule": "proposed_plan 必须再通过受限计划校验；模型不能执行计划。"
+    },
+    "explain_report": {
+      "request_fields": [
+        "request_id",
+        "report_id",
+        "evidence_summary",
+        "locale"
+      ],
+      "response_type": "ModelResult",
+      "rule": "只接收经筛选的证据摘要；解释不能改变确定性状态或指标。"
+    }
+  },
+  "result_fields": [
+    "request_id",
+    "status",
+    "message",
+    "error_code",
+    "proposed_plan",
+    "explanation",
+    "schema_version"
+  ],
+  "result_status": [
+    "disabled",
+    "ok",
+    "error"
+  ],
+  "disabled_error_code": "MODEL_NOT_CONFIGURED",
+  "network_calls_in_current_phase": false,
+  "deferred_features": [
+    "provider adapters",
+    "credentials",
+    "connection checks",
+    "structured-output transport",
+    "online model acceptance"
+  ]
+}
